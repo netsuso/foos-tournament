@@ -1,0 +1,48 @@
+<div id="simulation-input" class="col-md-5">
+<table class="table">
+<% @submatches.each do |sm| %>
+<tr>
+<td><%= sm[:player1a] %> + <%= sm[:player1b] %></td>
+<td>
+<div class="btn-group">
+  <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" id="dropdown-<%= sm[:idx] %>">
+    <span id="result-selected-<%= sm[:idx] %>" data-result-a="0" data-result-b="0" data-valid="0">Result</span> <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+<% @results1.each do |r| %>
+    <li><a href="#" class="result-selector" data-submatch="<%= sm[:idx] %>" data-result-a="<%= r[0] %>" data-result-b="<%= r[1] %>"><%= r[0] %>-<%= r[1] %></a></li>
+<% end %>
+    <li role="separator" class="divider"></li>
+<% @results2.each do |r| %>
+    <li><a href="#" class="result-selector" data-submatch="<%= sm[:idx] %>" data-result-a="<%= r[0] %>" data-result-b="<%= r[1] %>"><%= r[0] %>-<%= r[1] %></a></li>
+<% end %>
+  </ul>
+</div>
+</td>
+<td><%= sm[:player2a] %> + <%= sm[:player2b] %></td>
+</tr>
+<% end %>
+<tr>
+<td></td>
+<td><button type="button" class="btn btn-default btn-xs" id="simulate-submit" data-match-id="<%= @match_id %>" disabled="true">Simulate</button></td>
+<td></td>
+</table>
+</div>
+
+<div id="simulation-classification-old" class="col-md-2">
+<table class="table-borderless">
+<% @classification.each do |c| %>
+<% if c[:highlight] %>
+<tr class="active">
+<% else %>
+<tr>
+<% end %>
+<td><%= @players[c[:player_id]].name %></td>
+<td><span title="<%= "#{'%.2f' % c[:points]}" %>"><%= "#{'%.0f' % c[:points]}" %></span></td>
+</tr>
+<% end %>
+</table>
+</div>
+
+<div id="simulation-classification-new" class="col-md-2">
+</div>

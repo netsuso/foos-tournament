@@ -1,0 +1,29 @@
+<div class="col-md-12">
+<h4>Recently finished matches</h4>
+<table class="table table-striped table-condensed">
+<tr><th>Time</th><th>Division</th><th>Player 1</th><th></th><th>Player 2</th><th></th><th>Player 3</th><th></th><th>Player 4</th><th></th><th class="text-center">Duration</th></tr>
+<% @recent_matches.each do |m| %>
+<tr>
+<td><%= m.get_time() %></td>
+<td><%= @division_data[m.division_id][:name] %></td>
+<td><%= @players[m.players[0]].name %></td><td><%= m.victories[0] %></td>
+<td><%= @players[m.players[1]].name %></td><td><%= m.victories[1] %></td>
+<td><%= @players[m.players[2]].name %></td><td><%= m.victories[2] %></td>
+<td><%= @players[m.players[3]].name %></td><td><%= m.victories[3] %></td>
+<td class="text-center"><%= m.get_duration() %></td>
+</tr>
+<% end %>
+</table>
+</div>
+
+<% @division_data.each do |id, data| %>
+<div class="col-md-4">
+<h4><%= data[:name] %></h4>
+<table class="table table-condensed">
+<tr><th class="col-md-1 text-right">Pos</th><th class="col-md-4 text-left">Player</th><th class="col-md-2 text-right">Points</th></tr>
+<% data[:classification].each do |c| %>
+<tr><td class="text-right"><%= c[:position] %></td><td class="text-left"><%= @players[c[:player_id]].name %></td><td class="text-right"><span title="<%= "#{'%.2f' % c[:points]}" %>"><%= "#{'%.0f' % c[:points]}" %></span></td></tr>
+<% end %>
+</table>
+</div>
+<% end %>

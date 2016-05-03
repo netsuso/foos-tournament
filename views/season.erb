@@ -1,0 +1,13 @@
+<div class="col-md-12">
+
+<ul class="nav nav-tabs">
+  <li class="tab1-element active" id="tab1-division-0"><a href="#" class="tab1" data-id="0">Summary</a></li>
+<% @divisions.each do |d| %>
+  <li class="tab1-element" id="tab1-division-<%= d.id %>"><a href="#" class="tab1" data-id="<%= d.id %>"><%= d.name %></a></li>
+<% end %>
+</ul>
+
+<div id="tab1-content">
+</div>
+
+</div>

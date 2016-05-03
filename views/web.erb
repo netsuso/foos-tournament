@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Foosball tournament</title>
+<link rel="stylesheet" type="text/css" href="css/foos.css">
+<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+var current_section = 'summary';
+var current_season_id = <%= @default_season_id %>;
+var current_season_title = '<%= @default_season_title %>';
+/*var current_token_status = 'all';
+var current_token_status_name = 'All';
+var current_translation_status = 'all';
+var current_translation_status_name = 'All';
+var current_branch_id = null;
+var current_branch_name = '';
+var current_lang_code = null;
+var current_lang_name = '';
+var current_file_name = null;*/
+</script>
+</head>
+<body>
+
+  <!-- Static navbar -->
+  <nav class="navbar navbar-default navbar-static-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Foosball tournament</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span id="season-selected"><%= @default_season_title %></span><span class="caret"></span></a>
+            <ul class="dropdown-menu">
+<% @seasons.each do |s| %>
+              <li><a href="#" class="season-selector" data-season-id="<%= s.id %>"><%= s.title %></a></li>
+<% end %>
+            </ul>
+          </li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+  </nav>
+
+<div class="container" id="content"></div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/foos.js"></script>
+
+</body>
+</html>

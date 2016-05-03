@@ -1,0 +1,9 @@
+.table-borderless tr td {
+  border: 0px;
+  padding: 3px;
+  width: 100%;
+}
+
+.table-borderless tr.active td {
+  background-color:#c5c5c5;
+}
