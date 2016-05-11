@@ -1,6 +1,5 @@
 require 'data_mapper'
 require 'dm-migrations'
-require 'yaml'
 require 'conf'
 
 module DataModel
