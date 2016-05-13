@@ -40,7 +40,7 @@ class Solver
 
   def get_random_solution(player_list)
     nmatches = player_list.length / 4
-    for i in 0..100000
+    for i in 0..500000
       solution = player_list.shuffle
       wrong = false
       for m in 0...nmatches

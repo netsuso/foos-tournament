@@ -76,30 +76,81 @@ function load_simulator_modal(match_id) {
 
 function on_load_simulator_modal() {
 	$(".result-selector").click(select_result);
-    $("#simulate-submit").click(load_simulation);
+    $(".result-direct").click(select_result_direct);
 }
 
 function select_result() {
 	submatch = $(this).data('submatch');
     result_a = $(this).data('result-a');
     result_b = $(this).data('result-b');
+    update_selected_result(submatch, result_a, result_b);
+    $("#dropdown-" + submatch).dropdown("toggle");
+    run_simulation();
+    return false;
+}
+
+function select_result_direct() {
+	player = $(this).data("player");
+	result_direct = $(this).data("result-direct");
+	// FIXME: This if/else sequence could obviously be made
+	// cleaner, but for the moment it works OK :)
+	if (player == 0 && result_direct == 3) {
+		update_selected_result(1, 5, 2);
+		update_selected_result(2, 5, 2);
+		update_selected_result(3, 5, 2);
+	} else if (player == 0 && result_direct == 0) {
+		update_selected_result(1, 2, 5);
+		update_selected_result(2, 2, 5);
+		update_selected_result(3, 2, 5);
+	} else if (player == 1 && result_direct == 3) {
+		update_selected_result(1, 5, 2);
+		update_selected_result(2, 2, 5);
+		update_selected_result(3, 2, 5);
+	} else if (player == 1 && result_direct == 0) {
+		update_selected_result(1, 2, 5);
+		update_selected_result(2, 5, 2);
+		update_selected_result(3, 5, 2);
+	} else if (player == 2 && result_direct == 3) {
+		update_selected_result(1, 2, 5);
+		update_selected_result(2, 5, 2);
+		update_selected_result(3, 2, 5);
+	} else if (player == 2 && result_direct == 0) {
+		update_selected_result(1, 5, 2);
+		update_selected_result(2, 2, 5);
+		update_selected_result(3, 5, 2);
+	} else if (player == 3 && result_direct == 3) {
+		update_selected_result(1, 2, 5);
+		update_selected_result(2, 2, 5);
+		update_selected_result(3, 5, 2);
+	} else if (player == 3 && result_direct == 0) {
+		update_selected_result(1, 5, 2);
+		update_selected_result(2, 5, 2);
+		update_selected_result(3, 2, 5);
+	}
+	run_simulation();
+	return false;
+}
+
+function update_selected_result(submatch, result_a, result_b) {
 	result_txt = result_a + '-' + result_b;
 	$("#result-selected-" + submatch).text(result_txt);
 	$("#result-selected-" + submatch).data('valid', 1);
 	$("#result-selected-" + submatch).data('result-a', result_a);
 	$("#result-selected-" + submatch).data('result-b', result_b);
-    $("#dropdown-" + submatch).dropdown("toggle");
+}
 
-    if ($("#result-selected-1").data("valid") == 1 &&
-        $("#result-selected-2").data("valid") == 1 &&
-        $("#result-selected-3").data("valid") == 1) {
-        $("#simulate-submit").prop('disabled', false);
+function run_simulation() {
+    if ($("#result-selected-1").data("valid") != 1 &&
+        $("#result-selected-2").data("valid") != 1 &&
+        $("#result-selected-3").data("valid") != 1) {
+		return false;
 	}
-    return false;
+    load_simulation();
+	fill_victories();
 }
 
 function load_simulation() {
-    match_id = $(this).data('match-id');
+    match_id = $("#simulation-data").data('match-id');
     post_data = JSON.stringify({
         results: [
           [$("#result-selected-1").data('result-a'), $("#result-selected-1").data('result-b')],
@@ -108,6 +159,35 @@ function load_simulation() {
         ]
     });
 	$.post('ajax/simulation/' + match_id, post_data, on_load_simulation);
+}
+
+function fill_victories() {
+	victories = [0, 0, 0, 0]
+	if ($("#result-selected-1").data('result-a') == 5) {
+		victories[0] += 1;
+		victories[1] += 1;
+	} else {
+		victories[2] += 1;
+		victories[3] += 1;
+	}
+	if ($("#result-selected-2").data('result-a') == 5) {
+		victories[0] += 1;
+		victories[2] += 1;
+	} else {
+		victories[1] += 1;
+		victories[3] += 1;
+	}
+	if ($("#result-selected-3").data('result-a') == 5) {
+		victories[0] += 1;
+		victories[3] += 1;
+	} else {
+		victories[1] += 1;
+		victories[2] += 1;
+	}
+	$("#player-victories-0").html(victories[0]);
+	$("#player-victories-1").html(victories[1]);
+	$("#player-victories-2").html(victories[2]);
+	$("#player-victories-3").html(victories[3]);
 }
 
 function on_load_simulation(data, status) {

@@ -41,7 +41,7 @@
 <td><%= @players[m.players[1]].name %></td>
 <td><%= @players[m.players[2]].name %></td>
 <td><%= @players[m.players[3]].name %></td>
-<td><button class="btn btn-default" type="button" data-toggle="modal" data-target="#simulator-modal" data-match-id="<%= m.id %>">Simulate</button></td>
+<td><button class="btn btn-default" type="button" data-toggle="modal" data-target="#simulator-modal" data-match-id="<%= m.id %>">Predict</button></td>
 </tr>
 <% end %>
 </table>
@@ -71,7 +71,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-        <h4 class="modal-title" id="simulator-title">Match simulator</h4>
+        <h4 class="modal-title" id="simulator-title">Match predictor</h4>
       </div>
       <div class="modal-body container" id="simulator-content">
       </div>
