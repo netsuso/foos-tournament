@@ -88,12 +88,9 @@ class Match
   property :duration, Integer
 end
 
-def setup(db_uri)
-  #DataMapper::Logger.new($stdout, :debug)
-  DataMapper.setup(:default, db_uri)
-  DataMapper.repository(:default).adapter.resource_naming_convention = DataMapper::NamingConventions::Resource::UnderscoredAndPluralizedWithoutModule
-  DataMapper.finalize
-end
+#DataMapper::Logger.new($stdout, :debug)
+DataMapper.setup(:default, Conf.settings.db_uri)
+DataMapper.repository(:default).adapter.resource_naming_convention = DataMapper::NamingConventions::Resource::UnderscoredAndPluralizedWithoutModule
+DataMapper.finalize
 
-module_function :setup
 end

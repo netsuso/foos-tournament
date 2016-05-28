@@ -1,8 +1,7 @@
 $LOAD_PATH << '.'
 
 require 'sinatra'
-require 'sinatra/config_file'
-require 'dm/data_model'
+require 'conf'
 
 require 'tilt/erb'
 
@@ -12,12 +11,6 @@ require 'match_repository'
 require 'player_repository'
 require 'result_processor'
 require 'json'
-
-config_file File.join(File.dirname(File.expand_path(__FILE__)), 'config.yaml')
-
-configure do
-  DataModel.setup(settings.db_uri)
-end
 
 get '/' do
   season_repo = SeasonRepository.new()
@@ -398,7 +391,7 @@ get '/api/get_open_matches' do
 end
 
 before '/api/set_*' do
-  if params['apiKey'] != settings.api_key
+  if params['apiKey'] != Conf.settings.api_key
     halt 403
   end
 end
