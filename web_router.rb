@@ -121,7 +121,6 @@ end
 post '/ajax/simulation/:match' do
   body = request.body.read
   data = JSON.parse(body)
-puts data
 
   match_id = params[:match].to_i
   match_repo = MatchRepository.new()
