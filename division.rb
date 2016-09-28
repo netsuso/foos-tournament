@@ -39,18 +39,19 @@ end
 
 def analyse(extra_matches = [])
   one2one = {}
+  one2one[:main] = {}
   player_ids = get_player_ids()
   player_ids.each do |p|
-    one2one[p] = {}
+    one2one[:main][p] = {}
     (player_ids-[p]).each do |r|
-      one2one[p][r] = {}
-      one2one[p][r][:match_list] = []
-      one2one[p][r][:nmatches] = 0
-      one2one[p][r][:total_points] = 0
-      one2one[p][r][:victories] = 0
-      one2one[p][r][:defeats] = 0
-      one2one[p][r][:goalsfor] = 0
-      one2one[p][r][:goalsagainst] = 0
+      one2one[:main][p][r] = {}
+      one2one[:main][p][r][:match_list] = []
+      one2one[:main][p][r][:nmatches] = 0
+      one2one[:main][p][r][:total_points] = 0
+      one2one[:main][p][r][:victories] = 0
+      one2one[:main][p][r][:defeats] = 0
+      one2one[:main][p][r][:goalsfor] = 0
+      one2one[:main][p][r][:goalsagainst] = 0
     end
   end
 
@@ -60,49 +61,50 @@ def analyse(extra_matches = [])
     submatches.each do |team1, score1, team2, score2|
       team1.each do |p|
         team2.each do |r|
-          one2one[p][r][:nmatches] += 1
-          one2one[r][p][:nmatches] += 1
-          one2one[p][r][:match_list] += [score1, score2]
-          one2one[r][p][:match_list] += [score2, score1]
-          one2one[p][r][:goalsfor] += score1
-          one2one[r][p][:goalsfor] += score2
-          one2one[p][r][:goalsagainst] += score2
-          one2one[r][p][:goalsagainst] += score1
+          one2one[:main][p][r][:nmatches] += 1
+          one2one[:main][r][p][:nmatches] += 1
+          one2one[:main][p][r][:match_list] += [score1, score2]
+          one2one[:main][r][p][:match_list] += [score2, score1]
+          one2one[:main][p][r][:goalsfor] += score1
+          one2one[:main][r][p][:goalsfor] += score2
+          one2one[:main][p][r][:goalsagainst] += score2
+          one2one[:main][r][p][:goalsagainst] += score1
           if score1 > score2
-            one2one[p][r][:victories] += 1
-            one2one[r][p][:defeats] += 1
+            one2one[:main][p][r][:victories] += 1
+            one2one[:main][r][p][:defeats] += 1
             if @scoring == 2
-              one2one[p][r][:total_points] += 300 - score2*10
-              one2one[r][p][:total_points] += score2*10
+              one2one[:main][p][r][:total_points] += 300 - score2*10
+              one2one[:main][r][p][:total_points] += score2*10
             else
-              one2one[p][r][:total_points] += 300
+              one2one[:main][p][r][:total_points] += 300
             end
           else
-            one2one[p][r][:defeats] += 1
-            one2one[r][p][:victories] += 1
+            one2one[:main][p][r][:defeats] += 1
+            one2one[:main][r][p][:victories] += 1
             if @scoring == 2
-              one2one[p][r][:total_points] += score1*10
-              one2one[r][p][:total_points] += 300 - score1*10
+              one2one[:main][p][r][:total_points] += score1*10
+              one2one[:main][r][p][:total_points] += 300 - score1*10
             else
-              one2one[r][p][:total_points] += 300
+              one2one[:main][r][p][:total_points] += 300
             end
           end
         end
       end
     end
+    one2one[m.id] = Marshal.load(Marshal.dump(one2one[:main]))
   end
 
   player_ids.each do |p|
     (player_ids-[p]).each do |r|
-      if one2one[p][r][:nmatches] > 0
-        one2one[p][r][:points] = one2one[p][r][:total_points].to_f / one2one[p][r][:nmatches]
+      if one2one[:main][p][r][:nmatches] > 0
+        one2one[:main][p][r][:points] = one2one[:main][p][r][:total_points].to_f / one2one[:main][p][r][:nmatches]
       else
-        one2one[p][r][:points] = -1
+        one2one[:main][p][r][:points] = -1
       end
     end
   end
 
-  return one2one
+  return one2one[:main]
 end
 
 def get_rivals_info()
