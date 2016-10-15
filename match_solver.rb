@@ -19,7 +19,11 @@ class Solver
   end
 
   def get_one2one_score(confrontations)
-    return @@scores_nplayed[confrontations]
+    if @@scores_nplayed.key?(confrontations)
+      return @@scores_nplayed[confrontations]
+    else
+      return 0
+    end
   end
 
   def match_score(players, one2one, one2one_diff = {})
