@@ -4,16 +4,24 @@ attr_accessor :id
 attr_reader :level
 attr_reader :name
 attr_reader :scoring
+attr_reader :nrounds
 attr_reader :players
+attr_reader :total_matches
+attr_reader :planned_matches
+attr_reader :absences
 
 @one2one = nil
 
-def initialize(id, level, name, scoring, players, matches)
+def initialize(id, level, name, scoring, nrounds, players, total_matches, planned_matches, absences, matches)
   @id = id
   @level = level
   @name = name
   @scoring = scoring
+  @nrounds = nrounds
   @players = players
+  @total_matches = total_matches
+  @planned_matches = planned_matches
+  @absences = absences
   @matches = matches
 end
 
@@ -149,35 +157,58 @@ def get_classification(one2one = nil)
   return classification
 end
 
-def get_players_to_play(round)
-  players_to_play = []
-  extra_candidates = []
-  players_matches = {}
+def get_round_absences(round)
+  absent_players = {}
+  @absences.each do |p, r|
+    absent_players << p if r.key?(round)
+  end
+  return absent_players
+end
 
+def get_nmatches_per_player()
+  nmatches = {}
   @players.each do |p|
-    players_matches[p.id] = p.frequency
-    if p.extra > 0
-    	extra_candidates << p.id
+    nmatches[p] = 0
+  end
+  for m in @matches
+    submatches = m.get_submatches()
+    submatches.each do |team1, score1, team2, score2|
+      team1.each do |p|
+        nmatches[p] += 1
+      end
+      team2.each do |p|
+        nmatches[p] += 1
+      end
+    end
+  end
+  return nmatches
+end
+
+def get_pending_matches()
+  pending_matches = {}
+
+  played_matches = {}
+  @players.each do |p|
+    played_matches[p] = 0
+  end
+  for m in @matches
+    submatches = m.get_submatches()
+    submatches.each do |team1, score1, team2, score2|
+      team1.each do |p|
+        played_matches[p] += 1
+      end
+      team2.each do |p|
+        played_matches[p] += 1
+      end
     end
   end
 
-  round_matches = get_round_matches(round)
-
-  round_matches.each do |m|
-    players_matches[m.players[0]] -= 1
-    players_matches[m.players[1]] -= 1
-    players_matches[m.players[2]] -= 1
-    players_matches[m.players[3]] -= 1
+  pending_rounds = @nrounds - round + 1
+  @players.each do |p|
+    pending_matches[p] = @total_matches[p] - played_matches[p]
   end
 
-  get_player_ids().each do |p|
-    if players_matches[p] <= 0
-      next
-    end
-    players_to_play += [p] * players_matches[p]
-  end
-
-  return [players_to_play, extra_candidates]
+  return pending_matches
 end
 
 def get_classification_with_extra_match(extra_match)

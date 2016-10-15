@@ -11,7 +11,56 @@ def initialize(division, round)
   @round = round
 end
 
+# Número de rondas de la división
+# Número de partidos totales para cada jugador
+# Número de partidos planeado para cada jugador
+# Número de partidos jugado por cada jugador
+# Ausencias
+
 def assign_matches()
+  division_rounds = @division.nrounds
+  player_nmatches = @division.get_nmatches_per_player()
+  absences = @division.absences
+
+  
+
+
+
+
+  division_rounds = @division.nrounds
+  pending_matches = @division.get_pending_matches()
+  absences = @division.absences
+
+  players_to_play = []
+  remains = {}
+  remains_list = []
+
+  pending_matches.each do |p, pending|
+    future_absences = 0
+    if absences.key?(p)
+      if @round in absences[p] next
+      future_absences = absences[p].count { |x| x > @round }
+    end
+    pending_rounds = division_rounds - @round - future_absences + 1
+
+    target_matches = pending.to_f / pending_rounds
+    to_play = target_matches.round()
+    players_to_play += [p] * to_play
+    remains[p] = to_play - target_matches
+    remains_list << { :player => p, :toplay => to_play, :remain => remains[p] }
+  end
+
+  total_rivals = players_to_play.length()
+  uncomplete = total_rivals % 4
+  if uncomplete != 0
+    sorted_remains = remains_list.sort { |a, b| a[:remain] <=> b[:remain] }
+  end
+
+
+
+
+
+
   (players_to_play, extra_candidates) = @division.get_players_to_play(@round)
   if players_to_play.length == 0
     puts "No pending matches to play for any player" if @@debug

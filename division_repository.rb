@@ -18,12 +18,20 @@ def get(division_id)
   match_repo = MatchRepository.new()
   matches = match_repo.get_division_matches(division_id)
 
+  (total_matches, planned_matches) = get_division_players_data(division_id)
+
+  absences = get_player_absences(division_id)
+
   division_entity = Division.new(
     division_id,
     division_record.level,
     division_record.name,
     division_record.scoring,
+    division_record.nrounds,
     players,
+    total_matches,
+    planned_matches,
+    absences,
     matches
   )
   return division_entity
@@ -45,7 +53,11 @@ def get_season_divisions(season_id)
       d.level,
       d.name,
       d.scoring,
+      d.nrounds,
       players,
+      [],
+      [],
+      [],
       matches
     )
     division_entities << division_entity
@@ -61,6 +73,27 @@ def add(division_entity)
   division_record.save
   division_entity.id = division_record.id
   return division_record.id
+end
+
+def get_division_players_data(division_id)
+  total_matches = {}
+  planned_matches = {}
+  division_players = DataModel::Divisionplayer.all(DataModel::Divisionplayer.division_id => division_id)
+  division_players.each do |dp|
+    total_matches[dp.player_id] = dp.total_matches
+    planned_matches[dp.player_id] = dp.planned_matches
+  end
+  return [total_matches, planned_matches]
+end
+
+def get_player_absences(division_id)
+  absences = {}
+  absence_records = DataModel::Absence.all(DataModel::Absence.division_id => division_id)
+  absence_records.each do |a|
+    absences[a.player_id] = [] if not absences.key?(a.player_id)
+    absences[a.player_id] << a.round
+  end
+  return absences
 end
 
 end

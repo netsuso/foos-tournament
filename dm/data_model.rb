@@ -27,6 +27,7 @@ class Division
   property :level,   Integer
   property :name,    String
   property :scoring, Integer
+  property :nrounds, Integer
 end
 
 class Divisionplayer
@@ -34,6 +35,9 @@ class Divisionplayer
 
   belongs_to :division, :key => true
   belongs_to :player, :key => true
+
+  property :total_matches,   Integer
+  property :planned_matches, Float
 end
 
 class Player
@@ -45,8 +49,16 @@ class Player
 
   property :name,      String
   property :email,     String
-  property :frequency, Integer
-  property :extra,     Integer
+end
+
+class Absence
+  include DataMapper::Resource
+
+  property :id,    Serial
+  belongs_to :division
+  belongs_to :player
+
+  property :round, Integer
 end
 
 class Match
