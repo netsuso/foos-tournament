@@ -50,26 +50,26 @@ def assign_matches(division)
 
     puts "Player %3d: %2d rounds - %2d total - %5.2f (%2d) -> %5.2f (%2d) = %d to play" % [p, pending_rounds, total_matches[p], old_planned, assigned_matches[p], planned_matches[p], target, to_play[p]]
 
-    diff_planned = (target - planned_matches[p]).abs
-    damage_add = (target+1 - planned_matches[p]).abs - diff_planned
-    damage_remove = (target-1 - planned_matches[p]).abs - diff_planned
-
-    adjustment_add << { :player => p, :damage => damage_add, :priority => [damage_add, -total_matches[p], to_play[p], rand()] }
-    adjustment_remove << { :player => p, :damage => damage_remove, :priority => [damage_remove, -total_matches[p], -to_play[p], rand()] }
+    damage_remove = 0.5 + planned_matches[p] - target
+    damage_add = 1 - damage_remove
+    adjustment_remove << { :player => p, :damage => damage_remove, :sort_value => [(4*damage_remove).floor, -total_matches[p], damage_remove, -to_play[p], rand()] }
+    adjustment_add << { :player => p, :damage => damage_add, :sort_value => [(4*damage_add).floor, -total_matches[p], damage_add, to_play[p], rand()] }
   end
 
   uncomplete = total_rivals % 4
   if uncomplete != 0
     to_remove = uncomplete
     to_add = 4 - uncomplete
-    sorted_adjustment_add = adjustment_add.sort { |a, b| a[:priority] <=> b[:priority] }
-    sorted_adjustment_remove = adjustment_remove.sort { |a, b| a[:priority] <=> b[:priority] }
+    puts "There are #{uncomplete} extra players (total #{total_rivals}), we need to add #{to_add} or remove #{to_remove}"
+
+    sorted_adjustment_add = adjustment_add.sort { |a, b| a[:sort_value] <=> b[:sort_value] }
+    sorted_adjustment_remove = adjustment_remove.sort { |a, b| a[:sort_value] <=> b[:sort_value] }
     total_damage_add = sorted_adjustment_add[0...to_add].inject(0) { |sum, x| sum + x[:damage] }
     total_damage_remove = sorted_adjustment_remove[0...to_remove].inject(0) { |sum, x| sum + x[:damage] }
 
-    puts "Adding #{to_add} players would add a damage of #{total_damage_add}"
+    puts "Adding #{to_add} players would have a damage of #{total_damage_add}"
     puts sorted_adjustment_add
-    puts "Removing #{to_remove} players would add a damage of #{total_damage_remove}"
+    puts "Removing #{to_remove} players would have a damage of #{total_damage_remove}"
     puts sorted_adjustment_remove
 
     if total_damage_add <= total_damage_remove or current_round == total_rounds
@@ -86,6 +86,9 @@ def assign_matches(division)
       end
     end
   end
+
+  puts "Matches to be played by player:"
+  puts to_play
 
   players_to_play = []
   to_play.each do |p, tp|

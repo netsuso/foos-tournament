@@ -41,7 +41,8 @@ for m in 0...nmatches
   matches_to_add << match
 end
 
-# TODO: confirm before storing
+print "Press enter to confirm the assignments are valid: "
+STDIN.gets
 
 matches_to_add.each do |match|
   match_id = match_repo.add(match)
