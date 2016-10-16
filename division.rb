@@ -148,7 +148,7 @@ def get_classification(one2one = nil)
     if nrivals > 0
       points = total_points / nrivals
     end
-    classification << {:player_id => p, :points => points, :num_rivals => nrivals, :num_matches => total_matches/6}
+    classification << {:player_id => p, :points => points, :num_rivals => nrivals, :num_matches => total_matches/6, :tot_matches => @total_matches[p]}
   end
   classification = classification.sort {|a, b| b[:points] <=> a[:points]}
   pos = 1
