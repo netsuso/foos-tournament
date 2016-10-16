@@ -25,6 +25,7 @@ players_by_id = player_repo.get_all_players_by_id()
 
 matches_to_add = []
 
+round = division.current_round
 nmatches = solution.length / 4
 puts "Solution found with #{nmatches} matches:"
 for m in 0...nmatches
