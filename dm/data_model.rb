@@ -88,7 +88,7 @@ class Match
 end
 
 #DataMapper::Logger.new($stdout, :debug)
-DataMapper.setup(:default, 'sqlite:///home/suso/futbolin/pre/foos.db')
+DataMapper.setup(:default, 'sqlite:///home/suso/futbolin/foos.db')
 DataMapper.repository(:default).adapter.resource_naming_convention = DataMapper::NamingConventions::Resource::UnderscoredAndPluralizedWithoutModule
 DataMapper.finalize
 
