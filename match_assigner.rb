@@ -35,6 +35,7 @@ def assign_matches(division)
     if absences.key?(p)
       if absences[p].include?(current_round)
         puts "Player %3d: ABSENT" % p
+        to_play[p] = 0
         next
       end
       future_absences = absences[p].count { |x| x > current_round }
@@ -52,8 +53,11 @@ def assign_matches(division)
 
     damage_remove = 0.5 + planned_matches[p] - target
     damage_add = 1 - damage_remove
-    adjustment_remove << { :player => p, :damage => damage_remove, :sort_value => [(4*damage_remove).floor, -total_matches[p], damage_remove, -to_play[p], rand()] }
-    adjustment_add << { :player => p, :damage => damage_add, :sort_value => [(4*damage_add).floor, -total_matches[p], damage_add, to_play[p], rand()] }
+
+    penalty_nmatches = 0.25 * total_rounds / total_matches[p]
+
+    adjustment_remove << { :player => p, :damage => damage_remove, :sort_value => [damage_remove + penalty_nmatches, -to_play[p], rand()] }
+    adjustment_add << { :player => p, :damage => damage_add, :sort_value => [damage_add + penalty_nmatches, to_play[p], rand()] }
   end
 
   uncomplete = total_rivals % 4
