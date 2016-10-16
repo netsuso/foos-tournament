@@ -6,105 +6,114 @@ class MatchAssigner
 
 @@debug = false
 
-def initialize(division, round)
-  @division = division
-  @round = round
-end
+def assign_matches(division)
+  total_rounds = division.total_rounds
+  current_round = division.current_round
+  total_matches = division.total_matches
+  planned_matches = division.planned_matches
+  assigned_matches = division.get_assigned_nmatches()
+  absences = division.absences
 
-# Número de rondas de la división
-# Número de partidos totales para cada jugador
-# Número de partidos planeado para cada jugador
-# Número de partidos jugado por cada jugador
-# Ausencias
+  to_play = {}
+  total_rivals = 0
+  adjustment_add = []
+  adjustment_remove = []
 
-def assign_matches()
-  division_rounds = @division.nrounds
-  player_nmatches = @division.get_nmatches_per_player()
-  absences = @division.absences
+  current_round = 0 if current_round == nil
 
-  
+  if current_round >= total_rounds
+    raise 'All rounds have already been generated for this division'
+  end
 
+  current_round += 1
+  division.current_round = current_round
 
+  puts "Round #{current_round}/#{total_rounds}"
 
-
-  division_rounds = @division.nrounds
-  pending_matches = @division.get_pending_matches()
-  absences = @division.absences
-
-  players_to_play = []
-  remains = {}
-  remains_list = []
-
-  pending_matches.each do |p, pending|
+  total_matches.keys().each do |p|
     future_absences = 0
     if absences.key?(p)
-      if @round in absences[p] next
-      future_absences = absences[p].count { |x| x > @round }
+      if absences[p].include?(current_round)
+        puts "Player %3d: ABSENT" % p
+        next
+      end
+      future_absences = absences[p].count { |x| x > current_round }
     end
-    pending_rounds = division_rounds - @round - future_absences + 1
+    pending_rounds = total_rounds - current_round+1 - future_absences
+    matches_per_round = (total_matches[p] - planned_matches[p]) / pending_rounds
+    old_planned = planned_matches[p]
+    planned_matches[p] += matches_per_round
 
-    target_matches = pending.to_f / pending_rounds
-    to_play = target_matches.round()
-    players_to_play += [p] * to_play
-    remains[p] = to_play - target_matches
-    remains_list << { :player => p, :toplay => to_play, :remain => remains[p] }
+    target = planned_matches[p].round()
+    to_play[p] = target - assigned_matches[p]
+    total_rivals += to_play[p]
+
+    puts "Player %3d: %2d rounds - %2d total - %5.2f (%2d) -> %5.2f (%2d) = %d to play" % [p, pending_rounds, total_matches[p], old_planned, assigned_matches[p], planned_matches[p], target, to_play[p]]
+
+    diff_planned = (target - planned_matches[p]).abs
+    damage_add = (target+1 - planned_matches[p]).abs - diff_planned
+    damage_remove = (target-1 - planned_matches[p]).abs - diff_planned
+
+    adjustment_add << { :player => p, :damage => damage_add, :priority => [damage_add, -total_matches[p], to_play[p], rand()] }
+    adjustment_remove << { :player => p, :damage => damage_remove, :priority => [damage_remove, -total_matches[p], -to_play[p], rand()] }
   end
 
-  total_rivals = players_to_play.length()
   uncomplete = total_rivals % 4
   if uncomplete != 0
-    sorted_remains = remains_list.sort { |a, b| a[:remain] <=> b[:remain] }
+    to_remove = uncomplete
+    to_add = 4 - uncomplete
+    sorted_adjustment_add = adjustment_add.sort { |a, b| a[:priority] <=> b[:priority] }
+    sorted_adjustment_remove = adjustment_remove.sort { |a, b| a[:priority] <=> b[:priority] }
+    total_damage_add = sorted_adjustment_add[0...to_add].inject(0) { |sum, x| sum + x[:damage] }
+    total_damage_remove = sorted_adjustment_remove[0...to_remove].inject(0) { |sum, x| sum + x[:damage] }
+
+    puts "Adding #{to_add} players would add a damage of #{total_damage_add}"
+    puts sorted_adjustment_add
+    puts "Removing #{to_remove} players would add a damage of #{total_damage_remove}"
+    puts sorted_adjustment_remove
+
+    if total_damage_add <= total_damage_remove or current_round == total_rounds
+      sorted_adjustment_add[0...to_add].each do |pd|
+        p = pd[:player]
+        puts "Adding match to player " + p.to_s
+        to_play[p] += 1
+      end
+    else
+      sorted_adjustment_remove[0...to_remove].each do |pd|
+        p = pd[:player]
+        puts "Removing match to player " + p.to_s
+        to_play[p] -= 1
+      end
+    end
   end
 
+  players_to_play = []
+  to_play.each do |p, tp|
+    players_to_play += [p] * tp
+  end
 
-
-
-
-
-  (players_to_play, extra_candidates) = @division.get_players_to_play(@round)
-  if players_to_play.length == 0
+  nrivals = players_to_play.length
+  if nrivals == 0
     puts "No pending matches to play for any player" if @@debug
     return []
   end
   puts players_to_play if @@debug
 
-  nrivals = players_to_play.length
-  expected_rivals = 4*(nrivals/4.0).ceil()
-  extra_rivals = expected_rivals - nrivals
-
-  one2one = fill_basic_one2one(@division.players)
-  matches = @division.get_all_matches()
+  one2one = fill_basic_one2one(division.players)
+  matches = division.get_all_matches()
   fill_one2one_with_matches(one2one, matches)
 
-  best_score = 0
-  best_solution = []
-  best_one2one = []
-  best_extra = []
-
-  combinations = extra_candidates.combination(extra_rivals).to_a.shuffle
-  for extra in combinations
-    players_to_play_with_extra = players_to_play + extra
-    puts "Testing solution with extra #{extra}"
-    begin
-      solver = Solver.new(one2one)
-      solution, score, new_one2one = solver.solve(players_to_play_with_extra)
-    rescue Exception => e
-      puts "No valid solution could be achieved for these players"
-      next
-    end
-    if score > best_score
-      best_score = score
-      best_solution = solution
-      best_one2one = new_one2one
-      best_extra = extra
-      puts "Found new best solution with score #{score} and extra players #{best_extra}"
-    else
-      puts "No best solution (best score was #{score})"
-    end
+  begin
+    solver = Solver.new(one2one)
+    solution, score, new_one2one = solver.solve(players_to_play)
+    puts "Found solution with score #{score}"
+  rescue Exception => e
+    puts e
+    puts "No valid solution could be achieved for these players"
+    solution = []
   end
 
-  puts "The best solution has a score of #{best_score} with extra players #{best_extra}"
-  return best_solution
+  return solution
 end
 
 def fill_basic_one2one(players)

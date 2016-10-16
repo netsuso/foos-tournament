@@ -24,10 +24,11 @@ class Division
   has n, :players, :through => :divisionplayers
   has n, :matches
 
-  property :level,   Integer
-  property :name,    String
-  property :scoring, Integer
-  property :nrounds, Integer
+  property :level,         Integer
+  property :name,          String
+  property :scoring,       Integer
+  property :total_rounds,  Integer
+  property :current_round, Integer
 end
 
 class Divisionplayer
@@ -87,7 +88,7 @@ class Match
 end
 
 #DataMapper::Logger.new($stdout, :debug)
-DataMapper.setup(:default, 'sqlite:///home/suso/futbolin/foos.db')
+DataMapper.setup(:default, 'sqlite:///home/suso/futbolin/pre/foos.db')
 DataMapper.repository(:default).adapter.resource_naming_convention = DataMapper::NamingConventions::Resource::UnderscoredAndPluralizedWithoutModule
 DataMapper.finalize
 

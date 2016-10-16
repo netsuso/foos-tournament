@@ -27,7 +27,8 @@ def get(division_id)
     division_record.level,
     division_record.name,
     division_record.scoring,
-    division_record.nrounds,
+    division_record.total_rounds,
+    division_record.current_round,
     players,
     total_matches,
     planned_matches,
@@ -70,10 +71,25 @@ def add(division_entity)
   division_record.name = season_entity.name
   division_record.level = season_entity.level
   division_record.scoring = season_entity.scoring
-  division_record.save
+  division_record.save()
   division_entity.id = division_record.id
   return division_record.id
 end
+
+def update(division_entity)
+  division_id = division_entity.id
+  division_record = DataModel::Division.get(division_id)
+  divisionplayer_records = DataModel::Divisionplayer.all(DataModel::Divisionplayer.division_id => division_id)
+
+  map_entity_to_record(division_entity, division_record, divisionplayer_records)
+
+  division_record.save()
+  divisionplayer_records.each do |dp_record|
+    dp_record.save()
+  end
+end
+
+private
 
 def get_division_players_data(division_id)
   total_matches = {}
@@ -94,6 +110,15 @@ def get_player_absences(division_id)
     absences[a.player_id] << a.round
   end
   return absences
+end
+
+def map_entity_to_record(division_entity, division_record, divisionplayer_records)
+  division_record.current_round = division_entity.current_round
+  planned_matches = division_entity.planned_matches
+  divisionplayer_records.each do |dp_record|
+    player_id = dp_record.player_id
+    dp_record.planned_matches = planned_matches[player_id]
+  end
 end
 
 end

@@ -4,20 +4,22 @@ attr_accessor :id
 attr_reader :level
 attr_reader :name
 attr_reader :scoring
-attr_reader :nrounds
+attr_reader :total_rounds
+attr_accessor :current_round
 attr_reader :players
 attr_reader :total_matches
-attr_reader :planned_matches
+attr_accessor :planned_matches
 attr_reader :absences
 
 @one2one = nil
 
-def initialize(id, level, name, scoring, nrounds, players, total_matches, planned_matches, absences, matches)
+def initialize(id, level, name, scoring, total_rounds, current_round, players, total_matches, planned_matches, absences, matches)
   @id = id
   @level = level
   @name = name
   @scoring = scoring
-  @nrounds = nrounds
+  @total_rounds = total_rounds
+  @current_round = current_round
   @players = players
   @total_matches = total_matches
   @planned_matches = planned_matches
@@ -157,58 +159,17 @@ def get_classification(one2one = nil)
   return classification
 end
 
-def get_round_absences(round)
-  absent_players = {}
-  @absences.each do |p, r|
-    absent_players << p if r.key?(round)
-  end
-  return absent_players
-end
-
-def get_nmatches_per_player()
+def get_assigned_nmatches()
   nmatches = {}
   @players.each do |p|
-    nmatches[p] = 0
+    nmatches[p.id] = 0
   end
-  for m in @matches
-    submatches = m.get_submatches()
-    submatches.each do |team1, score1, team2, score2|
-      team1.each do |p|
-        nmatches[p] += 1
-      end
-      team2.each do |p|
-        nmatches[p] += 1
-      end
+  @matches.each do |m|
+    m.players.each do |p|
+      nmatches[p] += 1
     end
   end
   return nmatches
-end
-
-def get_pending_matches()
-  pending_matches = {}
-
-  played_matches = {}
-  @players.each do |p|
-    played_matches[p] = 0
-  end
-  for m in @matches
-    submatches = m.get_submatches()
-    submatches.each do |team1, score1, team2, score2|
-      team1.each do |p|
-        played_matches[p] += 1
-      end
-      team2.each do |p|
-        played_matches[p] += 1
-      end
-    end
-  end
-
-  pending_rounds = @nrounds - round + 1
-  @players.each do |p|
-    pending_matches[p] = @total_matches[p] - played_matches[p]
-  end
-
-  return pending_matches
 end
 
 def get_classification_with_extra_match(extra_match)
