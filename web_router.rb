@@ -170,6 +170,7 @@ get '/api/get_open_matches' do
       name4 = players[m.players[3]].name
       match_data = {
         :id => m.id,
+        :round => m.round,
         :players => [name1, name2, name3, name4],
         :submatches => [
           [[name1, name2], [name3, name4]],
