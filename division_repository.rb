@@ -90,6 +90,41 @@ def update(division_entity)
   end
 end
 
+def get_player_absences(division_id)
+  absences = {}
+  absence_records = DataModel::Absence.all(DataModel::Absence.division_id => division_id)
+  absence_records.each do |a|
+    absences[a.player_id] = [] if not absences.key?(a.player_id)
+    absences[a.player_id] << a.round
+  end
+  return absences
+end
+
+def update_absences(division_id, new_absences_data)
+  current_absence_records = DataModel::Absence.all(DataModel::Absence.division_id => division_id)
+
+  # First detect existing records that no longer exist
+  current_absence_records.each do |record|
+    p = record.player_id
+    if not new_absences_data.key?(p) or not new_absences_data[p].include?(record.round)
+      record.destroy()
+    else
+      new_absences_data[p].delete(record.round)
+    end
+  end
+
+  # Then create the newly added records
+  new_absences_data.keys().each do |p|
+    new_absences_data[p].each do |round|
+      record = DataModel::Absence.new()
+      record.division_id = division_id
+      record.player_id = p
+      record.round = round
+      record.save()
+    end
+  end
+end
+
 private
 
 def get_division_players_data(division_id)
@@ -101,16 +136,6 @@ def get_division_players_data(division_id)
     planned_matches[dp.player_id] = dp.planned_matches
   end
   return [total_matches, planned_matches]
-end
-
-def get_player_absences(division_id)
-  absences = {}
-  absence_records = DataModel::Absence.all(DataModel::Absence.division_id => division_id)
-  absence_records.each do |a|
-    absences[a.player_id] = [] if not absences.key?(a.player_id)
-    absences[a.player_id] << a.round
-  end
-  return absences
 end
 
 def map_entity_to_record(division_entity, division_record, divisionplayer_records)
