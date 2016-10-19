@@ -160,6 +160,7 @@ get '/api/get_open_matches' do
   response = []
   divisions.each do |d|
     division_data = {}
+    division_data[:division_id] = d.id
     division_data[:name] = d.name
     division_data[:matches] = []
     open_matches = d.get_open_matches()
@@ -171,6 +172,7 @@ get '/api/get_open_matches' do
       match_data = {
         :id => m.id,
         :round => m.round,
+        :player_ids => m.players,
         :players => [name1, name2, name3, name4],
         :submatches => [
           [[name1, name2], [name3, name4]],
