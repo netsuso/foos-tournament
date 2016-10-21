@@ -147,6 +147,121 @@ post '/ajax/simulation/:match' do
   erb :simulation
 end
 
+get '/api/v1/players' do
+  player_repo = PlayerRepository.new()
+  response = []
+  player_repo.get_all_players().each do |p|
+    response << player2api(p)
+  end
+  return JSON.generate(response)
+end
+
+get '/api/v1/players/:player_id' do
+  player_repo = PlayerRepository.new()
+  p = player_repo.get(params[:player_id])
+  return JSON.generate(player2api(p))
+end
+
+get '/api/v1/seasons' do
+  season_repo = SeasonRepository.new()
+  response = []
+  season_repo.get_all_seasons().each do |s|
+    response << season2api(s)
+  end
+  return JSON.generate(response)
+end
+
+get '/api/v1/seasons/current' do
+  season_repo = SeasonRepository.new()
+  s = season_repo.get_most_recent_season()
+  return JSON.generate(season2api(s))
+end
+
+get '/api/v1/seasons/:season_id' do
+  season_repo = SeasonRepository.new()
+  s = season_repo.get(params[:season_id].to_i)
+  return JSON.generate(season2api(s))
+end
+
+get '/api/v1/divisions/:division_id' do
+  division_repo = DivisionRepository.new()
+  d = division_repo.get(params[:division_id].to_i)
+  return JSON.generate(division2api(d))
+end
+
+get '/api/v1/divisions/:division_id/players' do
+  division_repo = DivisionRepository.new()
+  d = division_repo.get(params[:division_id].to_i)
+  return JSON.generate(d.players)
+end
+
+get '/api/v1/divisions/:division_id/players/:player_id' do
+  response = {}
+  division_repo = DivisionRepository.new()
+  d = division_repo.get(params[:division_id].to_i)
+  if d
+    p = d.players.find { |x| x.id == params[:player_id].to_i }
+    if p
+      if d.absences.key?(p.id)
+        absences = d.absences[p.id]
+      else
+        absences = []
+      end
+      response = {
+        'info' => player2api(p),
+        'absences' => absences
+      }
+    end
+  end
+  return JSON.generate(response)
+end
+
+get '/api/v1/divisions/:division_id/matches' do
+  division_repo = DivisionRepository.new()
+  d = division_repo.get(params[:division_id].to_i)
+  response = []
+  open_matches = d.get_all_matches()
+  open_matches.each do |m|
+    response << match2api(m)
+  end
+
+  JSON.generate(response)
+end
+
+get '/api/v1/divisions/:division_id/matches/open' do
+  division_repo = DivisionRepository.new()
+  d = division_repo.get(params[:division_id].to_i)
+
+  response = []
+  open_matches = d.get_open_matches()
+  open_matches.each do |m|
+    response << match2api(m)
+  end
+
+  JSON.generate(response)
+end
+
+get '/api/v1/divisions/:division_id/match/played' do
+  division_repo = DivisionRepository.new()
+  d = division_repo.get(params[:division_id].to_i)
+
+  response = []
+  open_matches = d.get_finished_matches()
+  open_matches.each do |m|
+    response << match2api(m)
+  end
+
+  JSON.generate(response)
+end
+
+get '/api/v1/matches/:match_id' do
+  match_repo = MatchRepository.new()
+  match = match_repo.get(params[:match_id].to_i)
+  match.calculate_victories()
+  response = match2json(match)
+  JSON.generate(response)
+end
+
 get '/api/get_open_matches' do
   season_repo = SeasonRepository.new()
   match_repo = MatchRepository.new()
@@ -202,4 +317,58 @@ post '/api/set_result' do
   else
     JSON.generate({'result' => 'Match result correctly processed'})
   end
+end
+
+def match2api(m)
+  response = {
+    'id' => m.id,
+    'division_id' => m.division_id,
+    'round' => m.round,
+    'players' => m.players
+  }
+  if m.played
+    response['played'] = true
+    response['scores'] = m.scores
+    response['victories'] = m.victories
+    response['time'] = m.time
+    response['duration'] = m.duration
+  else
+    response['played'] = false
+  end
+  return response
+end
+
+def season2api(s)
+  response = {
+    'id' => s.id,
+    'title' => s.title,
+    'start' => s.start_time,
+    'end' => s.end_time,
+    'divisions' => [],
+  }
+
+  s.divisions.each do |d|
+    response['divisions'] << division2api(d)
+  end
+
+  return response
+end
+
+def division2api(d)
+  response = {
+    'id' => d.id,
+    'title' => d.name,
+    'total_rounds' => d.total_rounds,
+    'current_round' => d.current_round,
+  }
+  return response
+end
+
+def player2api(p)
+  response = {
+    'id' => p.id,
+    'name' => p.name,
+    'email' => p.email,
+  }
+  return response
 end

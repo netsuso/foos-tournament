@@ -7,19 +7,36 @@ class PlayerRepository
 
 public
 
+def get(player_id)
+  player_record = DataModel::Player.get(player_id)
+  return map_record_to_entity(player_record)
+end
+
+def get_all_players()
+  player_records = DataModel::Player.all()
+  player_entities = []
+  player_records.each do |p|
+    player_entities << map_record_to_entity(p)
+  end
+  return player_entities
+end
+
 def get_all_players_by_id()
   player_records = DataModel::Player.all()
   players_by_id = {}
   player_records.each do |p|
-    player_entity = Player.new(p.id, p.name, p.email)
-    players_by_id[p.id] = player_entity
+    players_by_id[p.id] = map_record_to_entity(p)
   end
   return players_by_id
 end
 
 def get_division_players(division_id)
   player_records = DataModel::Player.all(DataModel::Player.divisions.id => division_id)
-  return map_records_to_entities(player_records)
+  player_entities = []
+  player_records.each do |p|
+    player_entities << map_record_to_entity(p)
+  end
+  return player_entities
 end
 
 # TODO
@@ -34,12 +51,8 @@ end
 
 private
 
-def map_records_to_entities(player_records)
-  player_entities = []
-  player_records.each do |p|
-    player_entity = Player.new(p.id, p.name, p.email)
-    player_entities << player_entity
-  end
+def map_record_to_entity(player_record)
+  player_entity = Player.new(player_record.id, player_record.name, player_record.email)
 end
 
 end
