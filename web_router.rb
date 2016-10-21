@@ -245,7 +245,7 @@ get '/api/v1/divisions/:division_id/matches/open' do
   JSON.generate(response)
 end
 
-get '/api/v1/divisions/:division_id/match/played' do
+get '/api/v1/divisions/:division_id/matches/played' do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
 
