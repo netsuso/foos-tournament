@@ -192,7 +192,11 @@ end
 get '/api/v1/divisions/:division_id/players' do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
-  return JSON.generate(d.players)
+  response = []
+  d.players.each do |p|
+    response << player2api(p)
+  end
+  return JSON.generate(response)
 end
 
 get '/api/v1/divisions/:division_id/players/:player_id' do
