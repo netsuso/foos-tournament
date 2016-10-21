@@ -211,10 +211,8 @@ get '/api/v1/divisions/:division_id/players/:player_id' do
       else
         absences = []
       end
-      response = {
-        'info' => player2api(p),
-        'absences' => absences
-      }
+      response = player2api(p)
+      response['absences'] = absences
     end
   end
   return JSON.generate(response)
@@ -254,6 +252,14 @@ get '/api/v1/divisions/:division_id/matches/played' do
   open_matches.each do |m|
     response << match2api(m)
   end
+
+  JSON.generate(response)
+end
+
+get '/api/v1/divisions/:division_id/classification' do
+  division_repo = DivisionRepository.new()
+  d = division_repo.get(params[:division_id].to_i)
+  response = d.get_classification()
 
   JSON.generate(response)
 end
@@ -372,7 +378,6 @@ def player2api(p)
   response = {
     'id' => p.id,
     'name' => p.name,
-    'email' => p.email,
   }
   return response
 end
