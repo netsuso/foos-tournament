@@ -37,6 +37,12 @@ def add(match_entity)
   return match_record.id
 end
 
+def delete(match_entity)
+  match_id = match_entity.id
+  match_record = DataModel::Match.get(match_id)
+  match_record.destroy
+end
+
 private
 
 def map_record_to_entity(m)
