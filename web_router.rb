@@ -147,7 +147,7 @@ post '/ajax/simulation/:match' do
   erb :simulation
 end
 
-get '/api/v1/players' do
+get %r{/api/v1/players/?$} do
   player_repo = PlayerRepository.new()
   response = []
   player_repo.get_all_players().each do |p|
@@ -156,13 +156,13 @@ get '/api/v1/players' do
   return JSON.generate(response)
 end
 
-get '/api/v1/players/:player_id' do
+get %r{/api/v1/players/(?<player_id>\d+)/?$} do
   player_repo = PlayerRepository.new()
   p = player_repo.get(params[:player_id])
   return JSON.generate(player2api(p))
 end
 
-get '/api/v1/seasons' do
+get %r{/api/v1/seasons/?$} do
   season_repo = SeasonRepository.new()
   response = []
   season_repo.get_all_seasons().each do |s|
@@ -171,25 +171,25 @@ get '/api/v1/seasons' do
   return JSON.generate(response)
 end
 
-get '/api/v1/seasons/current' do
+get %r{/api/v1/seasons/current/?$} do
   season_repo = SeasonRepository.new()
   s = season_repo.get_most_recent_season()
   return JSON.generate(season2api(s))
 end
 
-get '/api/v1/seasons/:season_id' do
+get %r{/api/v1/seasons/(?<season_id>\d+)/?$} do
   season_repo = SeasonRepository.new()
   s = season_repo.get(params[:season_id].to_i)
   return JSON.generate(season2api(s))
 end
 
-get '/api/v1/divisions/:division_id' do
+get %r{/api/v1/divisions/(?<division_id>\d+)/?$} do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
   return JSON.generate(division2api(d))
 end
 
-get '/api/v1/divisions/:division_id/players' do
+get %r{/api/v1/divisions/(?<division_id>\d+)/players/?$} do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
   response = []
@@ -199,7 +199,7 @@ get '/api/v1/divisions/:division_id/players' do
   return JSON.generate(response)
 end
 
-get '/api/v1/divisions/:division_id/players/:player_id' do
+get %r{/api/v1/divisions/(?<division_id>\d+)/players/(?<player_id>\d+)/?$} do
   response = {}
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
@@ -218,7 +218,7 @@ get '/api/v1/divisions/:division_id/players/:player_id' do
   return JSON.generate(response)
 end
 
-get '/api/v1/divisions/:division_id/matches' do
+get %r{/api/v1/divisions/(?<division_id>\d+)/matches/?$} do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
   response = []
@@ -230,7 +230,7 @@ get '/api/v1/divisions/:division_id/matches' do
   JSON.generate(response)
 end
 
-get '/api/v1/divisions/:division_id/matches/open' do
+get %r{/api/v1/divisions/(?<division_id>\d+)/matches/open/?$} do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
 
@@ -243,7 +243,7 @@ get '/api/v1/divisions/:division_id/matches/open' do
   JSON.generate(response)
 end
 
-get '/api/v1/divisions/:division_id/matches/played' do
+get %r{/api/v1/divisions/(?<division_id>\d+)/matches/played/?$} do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
 
@@ -256,7 +256,7 @@ get '/api/v1/divisions/:division_id/matches/played' do
   JSON.generate(response)
 end
 
-get '/api/v1/divisions/:division_id/classification' do
+get %r{/api/v1/divisions/(?<division_id>\d+)/classification/?$} do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
   response = d.get_classification()
@@ -264,11 +264,12 @@ get '/api/v1/divisions/:division_id/classification' do
   JSON.generate(response)
 end
 
-get '/api/v1/matches/:match_id' do
+get %r{/api/v1/matches/(?<match_id>\d+)/?$} do
   match_repo = MatchRepository.new()
   match = match_repo.get(params[:match_id].to_i)
   match.calculate_victories()
-  response = match2json(match)
+  response = match2api(match)
+
   JSON.generate(response)
 end
 
