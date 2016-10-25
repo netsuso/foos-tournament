@@ -153,13 +153,13 @@ get %r{/api/v1/players/?$} do
   player_repo.get_all_players().each do |p|
     response[p.id] = player2api(p)
   end
-  return JSON.generate(response)
+  json_api(response)
 end
 
 get %r{/api/v1/players/(?<player_id>\d+)/?$} do
   player_repo = PlayerRepository.new()
   p = player_repo.get(params[:player_id])
-  return JSON.generate(player2api(p))
+  json_api(player2api(p))
 end
 
 get %r{/api/v1/seasons/?$} do
@@ -168,25 +168,25 @@ get %r{/api/v1/seasons/?$} do
   season_repo.get_all_seasons().each do |s|
     response << season2api(s)
   end
-  return JSON.generate(response)
+  json_api(response)
 end
 
 get %r{/api/v1/seasons/current/?$} do
   season_repo = SeasonRepository.new()
   s = season_repo.get_most_recent_season()
-  return JSON.generate(season2api(s))
+  json_api(season2api(s))
 end
 
 get %r{/api/v1/seasons/(?<season_id>\d+)/?$} do
   season_repo = SeasonRepository.new()
   s = season_repo.get(params[:season_id].to_i)
-  return JSON.generate(season2api(s))
+  json_api(season2api(s))
 end
 
 get %r{/api/v1/divisions/(?<division_id>\d+)/?$} do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
-  return JSON.generate(division2api(d))
+  json_api(division2api(d))
 end
 
 get %r{/api/v1/divisions/(?<division_id>\d+)/players/?$} do
@@ -196,7 +196,7 @@ get %r{/api/v1/divisions/(?<division_id>\d+)/players/?$} do
   d.players.each do |p|
     response[p.id] = player2api(p)
   end
-  return JSON.generate(response)
+  json_api(response)
 end
 
 get %r{/api/v1/divisions/(?<division_id>\d+)/players/(?<player_id>\d+)/?$} do
@@ -215,7 +215,7 @@ get %r{/api/v1/divisions/(?<division_id>\d+)/players/(?<player_id>\d+)/?$} do
       response['absences'] = absences
     end
   end
-  return JSON.generate(response)
+  json_api(response)
 end
 
 get %r{/api/v1/divisions/(?<division_id>\d+)/matches/?$} do
@@ -227,7 +227,7 @@ get %r{/api/v1/divisions/(?<division_id>\d+)/matches/?$} do
     response << match2api(m)
   end
 
-  JSON.generate(response)
+  json_api(response)
 end
 
 get %r{/api/v1/divisions/(?<division_id>\d+)/matches/open/?$} do
@@ -240,7 +240,7 @@ get %r{/api/v1/divisions/(?<division_id>\d+)/matches/open/?$} do
     response << match2api(m)
   end
 
-  JSON.generate(response)
+  json_api(response)
 end
 
 get %r{/api/v1/divisions/(?<division_id>\d+)/matches/played/?$} do
@@ -253,7 +253,7 @@ get %r{/api/v1/divisions/(?<division_id>\d+)/matches/played/?$} do
     response << match2api(m)
   end
 
-  JSON.generate(response)
+  json_api(response)
 end
 
 get %r{/api/v1/divisions/(?<division_id>\d+)/classification/?$} do
@@ -261,7 +261,7 @@ get %r{/api/v1/divisions/(?<division_id>\d+)/classification/?$} do
   d = division_repo.get(params[:division_id].to_i)
   response = d.get_classification()
 
-  JSON.generate(response)
+  json_api(response)
 end
 
 get %r{/api/v1/matches/(?<match_id>\d+)/?$} do
@@ -270,7 +270,7 @@ get %r{/api/v1/matches/(?<match_id>\d+)/?$} do
   match.calculate_victories()
   response = match2api(match)
 
-  JSON.generate(response)
+  json_api(response)
 end
 
 get '/api/get_open_matches' do
@@ -311,7 +311,7 @@ get '/api/get_open_matches' do
     response << division_data
   end
 
-  JSON.generate(response)
+  json_api(response)
 end
 
 post '/api/set_result' do
@@ -324,9 +324,9 @@ post '/api/set_result' do
 
   result = ResultProcessor.parse_result(data)
   if result == false
-    JSON.generate({'result' => 'Match result already processed'})
+    json_api({'result' => 'Match result already processed'})
   else
-    JSON.generate({'result' => 'Match result correctly processed'})
+    json_api({'result' => 'Match result correctly processed'})
   end
 end
 
@@ -361,7 +361,6 @@ def season2api(s)
   s.divisions.each do |d|
     response['divisions'] << division2api(d)
   end
-
   return response
 end
 
@@ -378,4 +377,9 @@ end
 def player2api(p)
   response = { 'name' => p.name }
   return response
+end
+
+def json_api(object)
+  #return JSON.generate(object)
+  return JSON.pretty_generate(object)
 end
