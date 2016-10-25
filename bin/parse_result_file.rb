@@ -11,5 +11,5 @@ end
 ARGV.each do |f|
   fd = open(f)
   result_data = JSON.load(fd)
-  ResultProcessor.parse_result(result_data)
+  ResultProcessor.parse_result(result_data, true)
 end
