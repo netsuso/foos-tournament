@@ -149,9 +149,9 @@ end
 
 get %r{/api/v1/players/?$} do
   player_repo = PlayerRepository.new()
-  response = []
+  response = {}
   player_repo.get_all_players().each do |p|
-    response << player2api(p)
+    response[p.id] = player2api(p)
   end
   return JSON.generate(response)
 end
@@ -192,9 +192,9 @@ end
 get %r{/api/v1/divisions/(?<division_id>\d+)/players/?$} do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
-  response = []
+  response = {}
   d.players.each do |p|
-    response << player2api(p)
+    response[p.id] = player2api(p)
   end
   return JSON.generate(response)
 end
@@ -376,9 +376,6 @@ def division2api(d)
 end
 
 def player2api(p)
-  response = {
-    'id' => p.id,
-    'name' => p.name,
-  }
+  response = { 'name' => p.name }
   return response
 end
