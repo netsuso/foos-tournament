@@ -18,3 +18,7 @@
 .table-super-condensed tbody tr td {
   padding: 3px;
 }
+
+.popover{
+  max-width: 100%;
+}

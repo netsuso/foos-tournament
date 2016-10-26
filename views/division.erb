@@ -50,7 +50,7 @@
 <div class="col-md-12">
 <h4>Matches already played</h4>
 <table class="table table-striped table-condensed">
-<tr><th>Time</th><th>Player 1</th><th></th><th>Player 2</th><th></th><th>Player 3</th><th></th><th>Player 4</th><th></th><th class="text-center">Duration</th></tr>
+<tr><th>Time</th><th>Player 1</th><th></th><th>Player 2</th><th></th><th>Player 3</th><th></th><th>Player 4</th><th></th><th class="text-center">Details</th><th class="text-center">Duration</th></tr>
 <% @finished_matches.each do |m| %>
 <tr>
 <td><%= m.get_time() %></td>
@@ -58,6 +58,7 @@
 <td><%= @players[m.players[1]].name %></td><td><%= m.victories[1] %></td>
 <td><%= @players[m.players[2]].name %></td><td><%= m.victories[2] %></td>
 <td><%= @players[m.players[3]].name %></td><td><%= m.victories[3] %></td>
+<td class="text-center"><button class="btn btn-default btn-xs match-result-popover" data-toggle="popover" data-content="<table class='table table-condensed table-borderless'><tr><td class='text-right'><%= @players[m.players[0]].name %> + <%= @players[m.players[1]].name %></td><td><%= m.scores[0][0].to_s %>-<%= m.scores[0][1].to_s %></td><td><%= @players[m.players[2]].name %> + <%= @players[m.players[3]].name %></td></tr><tr><td class='text-right'><%= @players[m.players[0]].name %> + <%= @players[m.players[2]].name %></td><td><%= m.scores[1][0].to_s %>-<%= m.scores[1][1].to_s %></td><td><%= @players[m.players[1]].name %> + <%= @players[m.players[3]].name %></td></tr><tr><td class='text-right'><%= @players[m.players[0]].name %> + <%= @players[m.players[3]].name %></td><td><%= m.scores[2][0].to_s %>-<%= m.scores[2][1].to_s %></td><td><%= @players[m.players[1]].name %> + <%= @players[m.players[2]].name %></td></tr></table>">Details</button></td>
 <td class="text-center"><%= m.get_duration() %></td>
 </tr>
 <% end %>

@@ -42,6 +42,17 @@ function load_summary_subsection() {
 }
 
 function on_load_summary_subsection() {
+    activate_match_popovers();
+}
+
+function activate_match_popovers() {
+    $('.match-result-popover').popover({
+      container: 'body',
+      trigger: 'hover',
+      placement: 'auto',
+      html: true,
+      animation: false
+    })
 }
 
 
@@ -58,6 +69,7 @@ function on_load_division_subsection() {
         match_id = button.data('match-id');
         load_simulator_modal(match_id);
     });
+    activate_match_popovers();
 }
 
 function activate_player_detail() {
