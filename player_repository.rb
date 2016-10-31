@@ -44,9 +44,13 @@ def assign_player(division_id, player_id, nmatches)
   Divisionplayer.create(Divisionplayer.division.id => division_id, Divisionplayer.player.id => player_id)
 end
 
-# TODO
-def add()
-  p = Player.create(:name => name, :email => email)
+def add(player_entity)
+  player_record = DataModel::Player.new()
+  player_record.name = player_entity.name
+  player_record.email = player_entity.email
+  player_record.save
+  player_entity.id = player_record.id
+  return player_record.id
 end
 
 private
