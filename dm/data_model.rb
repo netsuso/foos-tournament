@@ -82,7 +82,7 @@ class Match
   property :score3a,  Integer  # p1+p4
   property :score3b,  Integer  # p2+p3
 
-  property :played,   Boolean
+  property :status,   Integer  # 0=pending 1=cancelled 2=played
   property :time,     DateTime
   property :duration, Integer
 end

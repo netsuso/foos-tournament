@@ -8,7 +8,7 @@ def self.parse_result(data, overwrite = false)
   match_id = data['id']
   match_repo = MatchRepository.new()
   match = match_repo.get(match_id)
-  if match.played and not overwrite
+  if match.played? and not overwrite
     return false
   end
 
@@ -16,7 +16,8 @@ def self.parse_result(data, overwrite = false)
 
   time = Time.at(data['start'])
   duration = data['end'] - data['start']
-  match.set_played_status(true, time, duration)
+  match.set_status(2)
+  match.set_played_stats(time, duration)
 
   match_repo.update(match)
 

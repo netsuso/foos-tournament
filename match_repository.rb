@@ -18,7 +18,7 @@ def get_division_matches(division_id)
 end
 
 def get_recently_finished_matches(division_ids, limit)
-  match_records = DataModel::Match.all(:division_id => division_ids, :played => true, :order => [:time.desc], :limit => limit)
+  match_records = DataModel::Match.all(:division_id => division_ids, :status => 2, :order => [:time.desc], :limit => limit)
   return map_records_to_entities(match_records)
 end
 
@@ -48,11 +48,12 @@ private
 def map_record_to_entity(m)
   players = [m.pl1, m.pl2, m.pl3, m.pl4]
   match_entity = Match.new(m.id,players, m.division_id, m.round)
-  if m.played
+  if m.played?
     scores = [[m.score1a, m.score1b], [m.score2a, m.score2b], [m.score3a, m.score3b]]
     match_entity.set_scores(scores)
   end
-  match_entity.set_played_status(m.played, m.time, m.duration)
+  match_entity.set_status(m.status)
+  match_entity.set_played_stats(m.time, m.duration)
   return match_entity
 end
 
@@ -67,13 +68,13 @@ end
 def map_entity_to_record(match_entity, match_record)
   match_record.division_id = match_entity.division_id
   match_record.round = match_entity.round
-  match_record.played = match_entity.played
+  match_record.status = match_entity.status
   players = match_entity.players
   match_record.pl1 = players[0]
   match_record.pl2 = players[1]
   match_record.pl3 = players[2]
   match_record.pl4 = players[3]
-  if match_entity.played
+  if match_entity.played?
     scores = match_entity.scores
     match_record.score1a = scores[0][0]
     match_record.score1b = scores[0][1]

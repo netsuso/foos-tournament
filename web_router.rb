@@ -125,7 +125,8 @@ post '/ajax/simulation/:match' do
   match_id = params[:match].to_i
   match_repo = MatchRepository.new()
   match = match_repo.get(match_id)
-  match.set_played_status(true, Time.now.to_i, 0)
+  match.set_status(2)
+  match.set_played_stats(Time.now.to_i, 0)
   match.set_scores(data['results'])
 
   division_repo = DivisionRepository.new()
@@ -337,7 +338,7 @@ def match2api(m)
     'round' => m.round,
     'players' => m.players
   }
-  if m.played
+  if m.played?
     response['played'] = true
     response['scores'] = m.scores
     response['victories'] = m.victories

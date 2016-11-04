@@ -36,11 +36,11 @@ def get_all_matches()
 end
 
 def get_open_matches()
-  return @matches.select { |x| x.played == false }
+  return @matches.select { |x| not x.played? }
 end
 
 def get_finished_matches()
-  return @matches.select { |x| x.played == true }
+  return @matches.select { |x| x.played? }
 end
 
 def get_round_matches(round)
@@ -66,7 +66,7 @@ def analyse(extra_matches = [])
   end
 
   for m in @matches + extra_matches
-    next if not m.played
+    next if not m.played?
     submatches = m.get_submatches()
     submatches.each do |team1, score1, team2, score2|
       team1.each do |p|

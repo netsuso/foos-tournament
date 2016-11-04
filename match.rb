@@ -6,7 +6,7 @@ attr_reader :round
 attr_reader :players
 attr_reader :scores
 attr_reader :victories
-attr_reader :played
+attr_reader :status
 attr_reader :time
 attr_reader :duration
 
@@ -24,8 +24,15 @@ def initialize(id, players, division_id, round)
   @victories = []
 end
 
-def set_played_status(played, time, duration)
-  @played = played
+def played?()
+  return @status == 2
+end
+
+def set_status(status)
+  @status = status
+end
+
+def set_played_stats(time, duration)
   @time = time
   @duration = duration
 end
