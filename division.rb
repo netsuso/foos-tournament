@@ -85,17 +85,21 @@ def analyse(extra_matches = [])
             if @scoring == 2
               one2one[:main][p][r][:total_points] += 300 - score2*10
               one2one[:main][r][p][:total_points] += score2*10
-            else
+            elsif @scoring == 1
               one2one[:main][p][r][:total_points] += 300
+            else
+              one2one[:main][p][r][:total_points] += 1
             end
           else
             one2one[:main][p][r][:defeats] += 1
             one2one[:main][r][p][:victories] += 1
-            if @scoring == 2
+            if @scoring == 0
+              one2one[:main][r][p][:total_points] += 1
+            elsif @scoring == 1
+              one2one[:main][r][p][:total_points] += 300
+            elsif @scoring == 2
               one2one[:main][p][r][:total_points] += score1*10
               one2one[:main][r][p][:total_points] += 300 - score1*10
-            else
-              one2one[:main][r][p][:total_points] += 300
             end
           end
         end
@@ -107,7 +111,11 @@ def analyse(extra_matches = [])
   player_ids.each do |p|
     (player_ids-[p]).each do |r|
       if one2one[:main][p][r][:nmatches] > 0
-        one2one[:main][p][r][:points] = one2one[:main][p][r][:total_points].to_f / one2one[:main][p][r][:nmatches]
+        if @scoring == 0
+          one2one[:main][p][r][:points] = one2one[:main][p][r][:total_points]
+        else
+          one2one[:main][p][r][:points] = one2one[:main][p][r][:total_points].to_f / one2one[:main][p][r][:nmatches]
+        end
       else
         one2one[:main][p][r][:points] = -1
       end
@@ -134,23 +142,42 @@ def get_classification(one2one = nil)
   one2one = get_one2one() if one2one == nil
   classification = []
   get_player_ids().each do |p|
-    total_matches = 0
+    played_matches = 0
     total_points = 0
     nrivals = 0
     points = 0
+    goals_for = 0
+    goals_against = 0
     one2one[p].each do |r, data|
       if data[:nmatches] > 0
         nrivals += 1
         total_points += data[:points]
-        total_matches += data[:nmatches]
+        played_matches += data[:nmatches]
+        goals_for += data[:goalsfor]
+        goals_against += data[:goalsagainst]
       end
     end
-    if nrivals > 0
+    if @scoring == 0
+      points = total_points / 2
+    elsif nrivals > 0
       points = total_points / nrivals
     end
-    classification << {:player_id => p, :points => points, :num_rivals => nrivals, :num_matches => total_matches/6, :tot_matches => @total_matches[p]}
+    classification << {
+      :player_id => p,
+      :points => points,
+      :num_rivals => nrivals,
+      :num_matches => played_matches/6,
+      :tot_matches => @total_matches[p],
+      :goals_for => goals_for,
+      :goals_agains => goals_against,
+      :goal_average => goals_for-goals_against
+    }
   end
-  classification = classification.sort {|a, b| b[:points] <=> a[:points]}
+  if @scoring == 0
+    classification = classification.sort {|a, b| [b[:points], b[:goal_average], b[:goals_for]] <=> [a[:points], a[:goal_average], a[:goals_for]]}
+  else
+    classification = classification.sort {|a, b| b[:points] <=> a[:points]}
+  end
   pos = 1
   classification.each do |c|
     c[:position] = pos
