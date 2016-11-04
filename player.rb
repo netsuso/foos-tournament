@@ -1,6 +1,6 @@
 class Player
 
-attr_reader :id
+attr_accessor :id
 attr_reader :name
 attr_reader :email
 
