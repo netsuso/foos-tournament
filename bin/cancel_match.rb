@@ -34,5 +34,6 @@ end
 puts "Updating division data..."
 division_repo.update(d)
 
-puts "Removing match..."
-match_repo.delete(m)
+puts "Setting match as cancelled..."
+m.set_status(1)
+match_repo.update(m)
