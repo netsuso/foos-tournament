@@ -48,7 +48,7 @@ private
 def map_record_to_entity(m)
   players = [m.pl1, m.pl2, m.pl3, m.pl4]
   match_entity = Match.new(m.id,players, m.division_id, m.round)
-  if m.played?
+  if m.status == 2
     scores = [[m.score1a, m.score1b], [m.score2a, m.score2b], [m.score3a, m.score3b]]
     match_entity.set_scores(scores)
   end
