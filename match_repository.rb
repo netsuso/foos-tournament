@@ -66,6 +66,7 @@ def map_records_to_entities(match_records)
 end
 
 def map_entity_to_record(match_entity, match_record)
+  match_record.id = match_entity.id if match_entity.id
   match_record.division_id = match_entity.division_id
   match_record.round = match_entity.round
   match_record.status = match_entity.status
