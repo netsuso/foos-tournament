@@ -1,13 +1,13 @@
 <div class="col-md-12">
 
 <ul class="nav nav-tabs">
-  <li class="tab1-element active" id="tab1-division-0"><a href="#" class="tab1" data-id="0">Summary</a></li>
+  <li class="tab-element active" id="tab-season-summary"><a href="#" class="tab-summary" id="tab-link-0" data-season-id="<%= @season_id %>">Summary</a></li>
 <% @divisions.each do |d| %>
-  <li class="tab1-element" id="tab1-division-<%= d.id %>"><a href="#" class="tab1" data-id="<%= d.id %>"><%= d.name %></a></li>
+  <li class="tab-element" id="tab-division-<%= d.id %>"><a href="#" class="tab-division" id="tab-link-<%= d.id %>" data-division-id="<%= d.id %>"><%= d.name %></a></li>
 <% end %>
 </ul>
 
-<div id="tab1-content">
+<div id="tab-content">
 </div>
 
 </div>

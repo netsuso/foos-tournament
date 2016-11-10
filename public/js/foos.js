@@ -1,44 +1,65 @@
 function startup() {
 	$(".season-selector").click(select_season);
-	load_season_section();
+	loaded_by_hash = load_section_by_hash();
+	if (!loaded_by_hash) {
+		load_season_section(default_season_id);
+	}
+}
+
+function load_section_by_hash() {
+    hash = window.location.hash.slice(1);
+    hash_parts = hash.split('-');
+    if (hash_parts.length != 2) {
+        return false;
+    } else {
+        season_id = hash_parts[0];
+        division_id = hash_parts[1];
+        load_season_section(season_id, division_id);
+        return true;
+    }
 }
 
 function select_season() {
 	season_id = $(this).data('season-id');
-	current_season_id = season_id;
-	current_season_title = $(this).text();
-	$("#season-selected").text(current_season_title);
-	load_season_section();
+	load_season_section(season_id);
 }
 
-function load_season_section() {
-	$("#content").load('ajax/season/' + current_season_id, on_load_season_section);
+function load_season_section(season_id, initial_subsection = 0) {
+	$("#content").load('ajax/season/' + season_id, function() { on_load_season_section(initial_subsection); });
+	season_title = $(".season-selector[data-season-id=" + season_id + "]").text();
+	$("#season-selected").text(season_title);
 	return false;
 }
 
-function on_load_season_section() {
-	$(".tab1").click(activate_tab1);
-	load_summary_subsection();
+function on_load_season_section(initial_subsection = 0) {
+	$(".tab-summary").click(activate_tab_summary);
+	$(".tab-division").click(activate_tab_division);
+	$("#tab-link-" + initial_subsection).trigger("click");
 }
 
-function activate_tab1() {
-	division_id = $(this).data('id');
+function activate_tab_summary() {
+	season_id = $(this).data('season-id');
+	load_summary_subsection(season_id);
+	$(".tab-element").removeClass("active");
+	$("#tab-season-summary").addClass("active");
+	window.location.hash = "#" + season_id + "-0";
+	return false;
+}
 
-	$(".tab1-element").removeClass("active");
-	$("#tab1-division-" + division_id).addClass("active");
-
-	if (division_id == 0) {
-		load_summary_subsection();
-	} else {
-		load_division_subsection(division_id);
-	}
+function activate_tab_division() {
+	division_id = $(this).data('division-id');
+	load_division_subsection(division_id);
+	$(".tab-element").removeClass("active");
+	$("#tab-division-" + division_id).addClass("active");
+	window.location.hash = "#" + season_id + "-" + division_id;
+	return false;
 }
 
 
 /* Summary subsection */
 
-function load_summary_subsection() {
-	$("#tab1-content").load('ajax/summary/' + current_season_id, on_load_summary_subsection);
+function load_summary_subsection(season_id) {
+	$("#tab-content").load('ajax/summary/' + season_id, on_load_summary_subsection);
 }
 
 function on_load_summary_subsection() {
@@ -59,7 +80,7 @@ function activate_match_popovers() {
 /* Division subsection */
 
 function load_division_subsection(division_id) {
-	$("#tab1-content").load('ajax/division/' + division_id, on_load_division_subsection);
+	$("#tab-content").load('ajax/division/' + division_id, on_load_division_subsection);
 }
 
 function on_load_division_subsection() {

@@ -5,11 +5,7 @@
 <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 <link rel="stylesheet" type="text/css" href="css/foos.css">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script>
-var current_section = 'summary';
-var current_season_id = <%= @default_season_id %>;
-var current_season_title = '<%= @default_season_title %>';
-</script>
+<script>var default_season_id=<%= @default_season_id %>;</script>
 </head>
 <body>
 
@@ -28,7 +24,7 @@ var current_season_title = '<%= @default_season_title %>';
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
           <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span id="season-selected"><%= @default_season_title %></span><span class="caret"></span></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span id="season-selected"></span><span class="caret"></span></a>
             <ul class="dropdown-menu">
 <% @seasons.each do |s| %>
               <li><a href="#" class="season-selector" data-season-id="<%= s.id %>"><%= s.title %></a></li>

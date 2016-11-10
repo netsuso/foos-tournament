@@ -15,14 +15,13 @@ get '/' do
   @seasons = season_repo.get_all_seasons()
   current_season = season_repo.get_most_recent_season()
   @default_season_id = current_season.id
-  @default_season_title = current_season.title
   erb :web
 end
 
 get '/ajax/season/:season_id' do
-  season_id = params[:season_id].to_i
+  @season_id = params[:season_id].to_i
   season_repo = SeasonRepository.new()
-  season = season_repo.get(season_id)
+  season = season_repo.get(@season_id)
   @divisions = season.divisions
   erb :season
 end
