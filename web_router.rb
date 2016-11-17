@@ -368,6 +368,7 @@ def division2api(d)
   response = {
     'id' => d.id,
     'title' => d.name,
+    'level' => d.level,
     'total_rounds' => d.total_rounds,
     'current_round' => d.current_round,
   }
