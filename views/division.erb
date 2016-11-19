@@ -6,7 +6,7 @@
 <table class="table table-condensed table-striped">
 <tr><th class="col-md-1 text-right">Pos</th><th class="col-md-4 text-left">Player</th><th class="col-md-2 text-right">Points</th><th class="col-md-2 text-right"># Rivals</th><th class="col-md-2 text-right"># Matches</th><th>Detail</th></tr>
 <% @classification.each do |c| %>
-<tr><td class="text-right"><%= c[:position] %></td><td class="text-left"><%= @players[c[:player_id]].name %></td><td class="text-right"><span title="<%= "#{'%.2f' % c[:points]}" %>"><%= "#{'%.0f' % c[:points]}" %></span></td><td class="text-right"><%= c[:num_rivals] %></td><td class="text-right"><%= c[:num_matches] %><% if c[:tot_matches] %> / <%= c[:tot_matches] %><% end %></td><td class="text-right"><a href="#" class="player-detail" data-player-id="<%= c[:player_id] %>"><span class="glyphicon glyphicon-triangle-right"></span></a></tr>
+<tr><td class="text-right"><%= c[:position] %></td><td class="text-left"><%= @players[c[:player_id]].name %></td><td class="text-right"><span title="<%= "#{'%.2f' % c[:points]}" %>"><%= "#{'%.0f' % c[:points]}" %></span></td><td class="text-right"><%= c[:num_rivals] %></td><td class="text-right"><%= c[:num_matches] %><% if @total_matches[c[:player_id]] %> / <%= @total_matches[c[:player_id]] %><% end %></td><td class="text-right"><a href="#" class="player-detail" data-player-id="<%= c[:player_id] %>"><span class="glyphicon glyphicon-triangle-right"></span></a></tr>
 <% end %>
 </table>
 </div>
@@ -28,7 +28,6 @@
 <% end %>
 
 </div>
-
 
 <div class="tab2-content tab2-content-matches">
 

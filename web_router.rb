@@ -36,7 +36,7 @@ get '/ajax/summary/:season_id' do
     division_entity = division_repo.get(d.id)
     @division_data[d.id] = {
       :name => division_entity.name,
-      :classification => division_entity.get_classification()
+      :classification => division_entity.get_current_classification()
     }
   end
 
@@ -53,10 +53,12 @@ end
 get '/ajax/division/:division' do
   division_repo = DivisionRepository.new
   division = division_repo.get(params[:division].to_i)
-  @classification = division.get_classification()
+  @division_id = division.id
+  @classification = division.get_current_classification()
   @rivals = division.get_rivals_info()
   @open_matches = division.get_open_matches()
   @finished_matches = division.get_finished_matches()
+  @total_matches = division.total_matches
 
   player_repo = PlayerRepository.new
   @players = player_repo.get_all_players_by_id()
@@ -78,7 +80,7 @@ get '/ajax/simulator/:match' do
   @match_players = match.players
   match_player_names = @match_players.map { |x| @players[x].name }
 
-  @classification = division.get_classification()
+  @classification = division.get_current_classification()
   @classification.each do |c|
     if @match_players.include?(c[:player_id])
       c[:highlight] = true
@@ -259,7 +261,7 @@ end
 get %r{/api/v1/divisions/(?<division_id>\d+)/classification/?$} do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
-  response = d.get_classification()
+  response = d.get_current_classification()
 
   json_api(response)
 end
