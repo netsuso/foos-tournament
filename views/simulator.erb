@@ -11,7 +11,7 @@
 <% (0..3).each do |p| %>
 <tr>
 <td class="text-right"><%= @players[@match_players[p]].name %></td>
-<td class="text-center"><span id="player-victories-<%= p %>">0</td>
+<td class="text-center"><span id="player-victories-<%= p %>">0</span></td>
 <td class="text-left">
 <button type="button" class="btn btn-default btn-xs result-direct" data-player="<%= p %>" data-result-direct="3">3</button>
 <button type="button" class="btn btn-default btn-xs result-direct" data-player="<%= p %>" data-result-direct="0">0</button>
