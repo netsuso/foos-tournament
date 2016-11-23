@@ -129,7 +129,7 @@ def analyse(extra_matches = [])
 
   classification_history << {:match => nil, :classification => current_classification.values}
 
-  for m in @matches + extra_matches
+  for m in @matches.reverse + extra_matches
     next if not m.played?
     classification = copy_current_classification(current_classification)
     analyse_match(m, one2one, classification)
