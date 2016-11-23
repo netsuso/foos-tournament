@@ -214,6 +214,8 @@ def analyse_match(match, one2one, classification)
 end
 
 def evaluate_match_score(one2one, p_winner, p_loser, score_winner, score_loser)
+  one2one[p_winner][p_loser][:victories] += 1
+  one2one[p_loser][p_winner][:defeats] += 1
   if @scoring == 0
     one2one[p_winner][p_loser][:total_points] += 0.5
   elsif @scoring == 1
