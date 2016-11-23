@@ -90,6 +90,12 @@ function on_load_division_subsection() {
         match_id = button.data('match-id');
         load_simulator_modal(match_id);
     });
+    $("#history-modal").on('show.bs.modal', function (event) {
+        button = $(event.relatedTarget);
+        division_id = button.data('division-id');
+        match_id = button.data('match-id');
+        load_history_modal(division_id, match_id);
+    });
     activate_match_popovers();
 }
 
@@ -98,6 +104,45 @@ function activate_player_detail() {
     element = "#classification-detail-" + player_id;
 	$(".classification-detail").hide();
 	$("#classification-detail-" + player_id).show();
+}
+
+
+/* History modal */
+
+function load_history_modal(division_id, match_id) {
+	$("#history-content").load('ajax/history/' + division_id, function() { on_load_history_modal(match_id) } );
+}
+
+function on_load_history_modal(match_id) {
+    $(".history-previous").click(show_history_previous);
+    $(".history-next").click(show_history_next);
+    if (match_id>0) {
+      initial_step = $(".classification-history[data-match-id=" + match_id + "]").data("step");
+    } else {
+      initial_step = $("#classification-history-last-step").data("last-step");
+    }
+    $("#classification-history-" + initial_step).show()
+}
+
+function show_history_previous() {
+    current = $(".classification-history:visible").data("step");
+    if (current > 1) {
+        previous = current - 1;
+        $("#classification-history-" + current).hide()
+        $("#classification-history-" + previous).show()
+    }
+    return false;
+}
+
+function show_history_next() {
+    current = $(".classification-history:visible").data("step");
+    last_step = $("#classification-history-last-step").data("last-step");
+    if (current < last_step) {
+        next = current + 1;
+        $("#classification-history-" + current).hide()
+        $("#classification-history-" + next).show()
+    }
+    return false;
 }
 
 

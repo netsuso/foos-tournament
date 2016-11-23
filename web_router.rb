@@ -66,6 +66,23 @@ get '/ajax/division/:division' do
   erb :division
 end
 
+get '/ajax/history/:division' do
+  @division_id = params[:division].to_i
+  division_repo = DivisionRepository.new()
+  division = division_repo.get(@division_id)
+
+  player_repo = PlayerRepository.new
+  @players = player_repo.get_all_players_by_id()
+
+  @classification_history = division.get_classification_history()
+  @classification_history.each do |step|
+    next if not step[:match]
+    step[:highlights] = step[:match].players
+  end
+
+  erb :history
+end
+
 get '/ajax/simulator/:match' do
   @match_id = params[:match].to_i
   match_repo = MatchRepository.new()

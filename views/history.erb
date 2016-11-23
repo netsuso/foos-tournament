@@ -1,0 +1,63 @@
+<div class="classification-history-modal-content col-md-9">
+<span id="classification-history-last-step" data-last-step="<%= @classification_history.length-1 %>"></span>
+
+<% for i in 1...(@classification_history.length) %>
+<div class="classification-history col-md-12" id="classification-history-<%= i %>" data-match-id="<%= @classification_history[i][:match].id %>" data-step="<%= i %>" style="display: none">
+
+<div class="col-md-4">
+<p class="text-center"><%= i %>/<%= (@classification_history.length-1) %></p>
+<ul class="pager">
+  <li><a href="#" class="history-previous">Previous</a></li>
+  <li><a href="#" class="history-next">Next</a></li>
+</ul>
+<table class="table table-borderless table-condensed">
+<tr>
+<th class="text-center col-md-6">Player</th>
+<th class="text-center col-md-6"># Wins</th>
+</tr>
+<% (0..3).each do |p| %>
+<tr>
+<td class="text-center"><%= @players[@classification_history[i][:match].players[p]].name %></td>
+<td class="text-center"><%= @classification_history[i][:match].victories[p] %></td>
+</tr>
+<% end %>
+</table>
+</div>
+
+<div class="col-md-4">
+<% if i>0 %>
+<table class="table table-super-condensed table-borderless">
+<% @classification_history[i-1][:classification].each do |c| %>
+<% if @classification_history[i][:highlights].include?(c[:player_id]) %>
+<tr class="active">
+<% else %>
+<tr>
+<% end %>
+<td><%= @players[c[:player_id]].name %></td>
+<td><span title="<%= "#{'%.2f' % c[:points]}" %>"><%= "#{'%.0f' % c[:points]}" %></span></td>
+</tr>
+<% end %>
+</table>
+<% end %>
+</div>
+
+<div class="col-md-4">
+<table class="table table-super-condensed table-borderless">
+<% @classification_history[i][:classification].each do |c| %>
+<% if @classification_history[i][:highlights].include?(c[:player_id]) %>
+<tr class="active">
+<% else %>
+<tr>
+<% end %>
+<td><%= @players[c[:player_id]].name %></td>
+<td><span title="<%= "#{'%.2f' % c[:points]}" %>"><%= "#{'%.0f' % c[:points]}" %></span></td>
+</tr>
+<% end %>
+</table>
+</div>
+
+</div>
+
+<% end %>
+
+</div>
