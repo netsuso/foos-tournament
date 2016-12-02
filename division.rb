@@ -123,7 +123,8 @@ def analyse(extra_matches = [])
       :num_matches => 0,
       :goals_for => 0,
       :goals_against => 0,
-      :goal_average => 0
+      :goal_average => 0,
+      :position => 0
     }
   end
 

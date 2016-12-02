@@ -19,6 +19,15 @@
   padding: 3px;
 }
 
-.popover{
+.popover {
   max-width: 100%;
+}
+
+.classification-up {
+  color: #fff;
+  background-color: #3c3;
+}
+.classification-down {
+  color: #fff;
+  background-color: #e44;
 }

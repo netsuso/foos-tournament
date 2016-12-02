@@ -74,10 +74,65 @@ get '/ajax/history/:division' do
   player_repo = PlayerRepository.new
   @players = player_repo.get_all_players_by_id()
 
-  @classification_history = division.get_classification_history()
-  @classification_history.each do |step|
-    next if not step[:match]
-    step[:highlights] = step[:match].players
+  full_classification_history = division.get_classification_history()
+  @classification_history = []
+  (1...(full_classification_history.length)).each do |i|
+    step = {
+      :match => full_classification_history[i][:match],
+      :before => full_classification_history[i-1][:classification],
+      :after => full_classification_history[i][:classification],
+      :highlight => {}
+    }
+    full_classification_history[i][:match].players.each do |p|
+      step[:highlight][p] = :equal
+    end
+    @classification_history << step
+  end
+
+  erb :history
+end
+
+get '/ajax/player/:player/:division' do
+  @player_id = params[:player].to_i
+  @division_id = params[:division].to_i
+  division_repo = DivisionRepository.new()
+  division = division_repo.get(@division_id)
+
+  player_repo = PlayerRepository.new
+  @players = player_repo.get_all_players_by_id()
+
+  full_classification_history = division.get_classification_history()
+  @classification_history = []
+  has_played_matches = false
+  (1...(full_classification_history.length)).each do |i|
+    player_in_match = false
+    if full_classification_history[i][:match].players.include?(@player_id)
+      has_played_matches = true
+      player_in_match = true
+    end
+    if has_played_matches
+      classification_before = full_classification_history[i-1][:classification]
+      classification_after = full_classification_history[i][:classification]
+      player_state_before = classification_before.find {|x| x[:player_id] == @player_id}
+      player_state_after = classification_after.find {|x| x[:player_id] == @player_id}
+      diff_points = player_state_after[:points] - player_state_before[:points]
+      diff_position = player_state_after[:position] - player_state_before[:position]
+      if diff_points != 0 or diff_position != 0
+        step = {
+          :match => full_classification_history[i][:match],
+          :before => classification_before,
+          :after => classification_after,
+        }
+        if diff_points > 0
+          step[:highlight] = { @player_id => :up }
+        elsif diff_points < 0
+          step[:highlight] = { @player_id => :down }
+        else
+          step[:highlight] = { @player_id => :equal }
+        end
+        @classification_history << step
+      end
+    end
   end
 
   erb :history

@@ -84,7 +84,7 @@ function load_division_subsection(division_id) {
 }
 
 function on_load_division_subsection() {
-    $(".player-detail").click(activate_player_detail);
+    $(".player-rivals").click(activate_player_rivals);
     $("#simulator-modal").on('show.bs.modal', function (event) {
         button = $(event.relatedTarget);
         match_id = button.data('match-id');
@@ -96,10 +96,22 @@ function on_load_division_subsection() {
         match_id = button.data('match-id');
         load_history_modal(division_id, match_id);
     });
+    $("#history-modal").on('hide.bs.modal', function (event) {
+        $("#history-content").text("");
+    });
+    $("#player-modal").on('show.bs.modal', function (event) {
+        link = $(event.relatedTarget);
+        division_id = link.data('division-id');
+        player_id = link.data('player-id');
+        load_player_modal(division_id, player_id);
+    });
+    $("#player-modal").on('hide.bs.modal', function (event) {
+        $("#player-content").text("");
+    });
     activate_match_popovers();
 }
 
-function activate_player_detail() {
+function activate_player_rivals() {
     player_id = $(this).data('player-id');
     element = "#classification-detail-" + player_id;
 	$(".classification-detail").hide();
@@ -113,10 +125,12 @@ function load_history_modal(division_id, match_id) {
 	$("#history-content").load('ajax/history/' + division_id, function() { on_load_history_modal(match_id) } );
 }
 
-function on_load_history_modal(match_id) {
+function on_load_history_modal(match_id = null) {
+    $(".history-first").click(show_history_first);
+    $(".history-last").click(show_history_last);
     $(".history-previous").click(show_history_previous);
     $(".history-next").click(show_history_next);
-    if (match_id>0) {
+    if (match_id && match_id>0) {
       initial_step = $(".classification-history[data-match-id=" + match_id + "]").data("step");
     } else {
       initial_step = $("#classification-history-last-step").data("last-step");
@@ -124,12 +138,25 @@ function on_load_history_modal(match_id) {
     $("#classification-history-" + initial_step).show()
 }
 
+function show_history_first() {
+    $(".classification-history:visible").hide();
+    $("#classification-history-1").show();
+    return false;
+}
+
+function show_history_last() {
+    $(".classification-history:visible").hide();
+    last_step = $("#classification-history-last-step").data("last-step");
+    $("#classification-history-" + last_step).show();
+    return false;
+}
+
 function show_history_previous() {
     current = $(".classification-history:visible").data("step");
     if (current > 1) {
         previous = current - 1;
-        $("#classification-history-" + current).hide()
-        $("#classification-history-" + previous).show()
+        $("#classification-history-" + current).hide();
+        $("#classification-history-" + previous).show();
     }
     return false;
 }
@@ -145,6 +172,16 @@ function show_history_next() {
     return false;
 }
 
+
+/* Player modal */
+
+function load_player_modal(division_id, player_id) {
+	$("#player-content").load('ajax/player/' + player_id + '/' + division_id, on_load_player_modal);
+}
+
+function on_load_player_modal() {
+    on_load_history_modal();
+}
 
 /* Simulator modal */
 

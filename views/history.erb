@@ -1,14 +1,16 @@
 <div class="classification-history-modal-content col-md-9">
-<span id="classification-history-last-step" data-last-step="<%= @classification_history.length-1 %>"></span>
+<span id="classification-history-last-step" data-last-step="<%= @classification_history.length %>"></span>
 
-<% for i in 1...(@classification_history.length) %>
-<div class="classification-history col-md-12" id="classification-history-<%= i %>" data-match-id="<%= @classification_history[i][:match].id %>" data-step="<%= i %>" style="display: none">
+<% for i in 0...(@classification_history.length) %>
+<div class="classification-history col-md-12" id="classification-history-<%= i+1 %>" data-match-id="<%= @classification_history[i][:match].id %>" data-step="<%= i+1 %>" style="display: none">
 
 <div class="col-md-4">
-<p class="text-center"><%= i %>/<%= (@classification_history.length-1) %></p>
+<p class="text-center"><%= i+1 %>/<%= @classification_history.length %></p>
 <ul class="pager">
-  <li><a href="#" class="history-previous">Previous</a></li>
-  <li><a href="#" class="history-next">Next</a></li>
+  <li><a href="#" class="history-first"><span class="glyphicon glyphicon-fast-backward"></span></a></li>
+  <li><a href="#" class="history-previous"><span class="glyphicon glyphicon-backward"></span></a></li>
+  <li><a href="#" class="history-next"><span class="glyphicon glyphicon-forward"></span></a></li>
+  <li><a href="#" class="history-last"><span class="glyphicon glyphicon-fast-forward"></span></a></li>
 </ul>
 <table class="table table-borderless table-condensed">
 <tr>
@@ -16,7 +18,11 @@
 <th class="text-center col-md-6"># Wins</th>
 </tr>
 <% (0..3).each do |p| %>
+<% if @classification_history[i][:highlight].key?(@classification_history[i][:match].players[p]) %>
+<tr class="active">
+<% else %>
 <tr>
+<% end %>
 <td class="text-center"><%= @players[@classification_history[i][:match].players[p]].name %></td>
 <td class="text-center"><%= @classification_history[i][:match].victories[p] %></td>
 </tr>
@@ -25,10 +31,9 @@
 </div>
 
 <div class="col-md-4">
-<% if i>0 %>
 <table class="table table-super-condensed table-borderless">
-<% @classification_history[i-1][:classification].each do |c| %>
-<% if @classification_history[i][:highlights].include?(c[:player_id]) %>
+<% @classification_history[i][:before].each do |c| %>
+<% if @classification_history[i][:highlight].key?(c[:player_id]) %>
 <tr class="active">
 <% else %>
 <tr>
@@ -38,14 +43,19 @@
 </tr>
 <% end %>
 </table>
-<% end %>
 </div>
 
 <div class="col-md-4">
 <table class="table table-super-condensed table-borderless">
-<% @classification_history[i][:classification].each do |c| %>
-<% if @classification_history[i][:highlights].include?(c[:player_id]) %>
+<% @classification_history[i][:after].each do |c| %>
+<% if @classification_history[i][:highlight].key?(c[:player_id]) %>
+<% if @classification_history[i][:highlight][c[:player_id]] == :up %>
+<tr class="classification-up">
+<% elsif @classification_history[i][:highlight][c[:player_id]] == :down %>
+<tr class="classification-down">
+<% elsif @classification_history[i][:highlight][c[:player_id]] == :equal %>
 <tr class="active">
+<% end %>
 <% else %>
 <tr>
 <% end %>
