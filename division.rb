@@ -36,7 +36,7 @@ def get_all_matches()
 end
 
 def get_open_matches()
-  return @matches.select { |x| not x.played? }
+  return @matches.select { |x| not x.played? and not x.cancelled? }
 end
 
 def get_finished_matches()

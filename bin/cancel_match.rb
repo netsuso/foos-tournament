@@ -15,7 +15,7 @@ match_id = ARGV[0].to_i
 m = match_repo.get(match_id)
 players = m.players
 
-if m.played
+if m.played?
   puts "Cannot cancel a match that has already been played"
   exit(1)
 end

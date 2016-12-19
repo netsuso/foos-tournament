@@ -28,6 +28,10 @@ def played?()
   return @status == 2
 end
 
+def cancelled?()
+  return @status == 1
+end
+
 def set_status(status)
   @status = status
 end
