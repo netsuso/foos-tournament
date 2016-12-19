@@ -35,6 +35,10 @@ def get_all_matches()
   return @matches
 end
 
+def get_assigned_matches()
+  return @matches.select { |x| not x.cancelled? }
+end
+
 def get_open_matches()
   return @matches.select { |x| not x.played? and not x.cancelled? }
 end
@@ -65,7 +69,7 @@ def get_assigned_nmatches()
   @players.each do |p|
     nmatches[p.id] = 0
   end
-  @matches.each do |m|
+  get_assigned_matches().each do |m|
     m.players.each do |p|
       nmatches[p] += 1
     end
@@ -130,8 +134,7 @@ def analyse(extra_matches = [])
 
   classification_history << {:match => nil, :classification => current_classification.values}
 
-  for m in @matches.reverse + extra_matches
-    next if not m.played?
+  for m in get_finished_matches().reverse + extra_matches
     classification = copy_current_classification(current_classification)
     analyse_match(m, one2one, classification)
 

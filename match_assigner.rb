@@ -107,7 +107,7 @@ def assign_matches(division)
   puts players_to_play if @@debug
 
   one2one = fill_basic_one2one(division.players)
-  matches = division.get_all_matches()
+  matches = division.get_assigned_matches()
   fill_one2one_with_matches(one2one, matches)
 
   begin

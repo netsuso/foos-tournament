@@ -296,8 +296,8 @@ get %r{/api/v1/divisions/(?<division_id>\d+)/matches/?$} do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
   response = []
-  open_matches = d.get_all_matches()
-  open_matches.each do |m|
+  assigned_matches = d.get_assigned_matches()
+  assigned_matches.each do |m|
     response << match2api(m)
   end
 
