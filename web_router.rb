@@ -1,5 +1,6 @@
 $LOAD_PATH << '.'
 
+require 'boostrap'
 require 'sinatra'
 require 'conf'
 
@@ -11,6 +12,7 @@ require 'match_repository'
 require 'player_repository'
 require 'result_processor'
 require 'json'
+require 'foostastic'
 
 get '/' do
   season_repo = SeasonRepository.new()
@@ -408,6 +410,8 @@ post '/api/set_result' do
   if result == false
     json_api({'result' => 'Match result already processed'})
   else
+    foostastic_webhook = Foostastic::Webhook.new
+    foostastic_webhook.run!
     json_api({'result' => 'Match result correctly processed'})
   end
 end

@@ -1,2 +1,3 @@
-foos.db
-config.yaml
+/config.yaml
+/*.db
+/tags
