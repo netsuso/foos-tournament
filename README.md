@@ -8,7 +8,7 @@ It relates to the [Foosball instant replay](https://github.com/swehner/foos) pro
 
 Barely working version, expect documentation and a demo soon.
 
-# Instalation
+# Installation
 
 ## Pre-requisites
 
