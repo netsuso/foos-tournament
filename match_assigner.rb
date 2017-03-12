@@ -30,12 +30,15 @@ def assign_matches(division)
 
   puts "Round #{current_round}/#{total_rounds}"
 
+  max_to_play = 0
+  absents = []
   total_matches.keys().each do |p|
     future_absences = 0
     if absences.key?(p)
       if absences[p].include?(current_round)
         puts "Player %3d: ABSENT" % p
         to_play[p] = 0
+        absents << p
         next
       end
       future_absences = absences[p].count { |x| x > current_round }
@@ -47,11 +50,33 @@ def assign_matches(division)
 
     target = planned_matches[p].round()
     to_play[p] = target - assigned_matches[p]
+    max_to_play = to_play[p] if to_play[p] > max_to_play
     total_rivals += to_play[p]
 
     puts "Player %3d: %2d rounds - %2d total - %5.2f (%2d) -> %5.2f (%2d) = %d to play" % [p, pending_rounds, total_matches[p], old_planned, assigned_matches[p], planned_matches[p], target, to_play[p]]
+  end
 
-    damage_remove = 0.5 + planned_matches[p] - target
+  while true
+    total_matches_to_play = (total_rivals/4).floor()
+    if max_to_play > total_matches_to_play
+	  to_play.keys().each do |p|
+        if to_play[p] > total_matches_to_play
+          removed = to_play[p] - total_matches_to_play
+          puts "Too many matches for player %d (%d for a total of %d matches), removing %d" % [p, to_play[p], total_matches_to_play, removed]
+          to_play[p] -= removed
+          total_rivals -= removed
+        end
+        max_to_play = total_matches_to_play
+      end
+    else
+      break
+    end
+  end
+
+  total_matches.keys().each do |p|
+    next if absents.include?(p)
+
+    damage_remove = 0.5 + planned_matches[p] - (assigned_matches[p] + to_play[p])
     damage_add = 1 - damage_remove
 
     penalty_nmatches = 0.25 * total_rounds / total_matches[p]
