@@ -27,11 +27,11 @@ Barely working version, expect documentation and a demo soon.
 
 ## Preparing for the first execution
 
-1. Make a copy of the file ```conf_example.rb``` and rename it to ```conf.rb```
+1. Make a copy of the file ```config.yaml.sample``` and rename it to ```config.yaml```
 ```
-> cp conf_example.rb conf.rb
+> cp config.yaml.sample config.yaml
 ```
-2. Update the ```:connection_string``` value to point to your data base
+2. Update the ```db_uri``` value to point to your data base
 3. Generate the database and the first season
 ```
 > cd <source-path>/dm
