@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
+#gem 'shotgun', :group => :development
 gem 'sinatra'
-gem 'datamapper'
+gem 'sinatra-contrib'
+gem 'data_mapper'
 gem 'dm-sqlite-adapter'
-gem 'dotenv'
+gem 'sqlite3'

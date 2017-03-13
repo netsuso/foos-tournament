@@ -1,6 +1,5 @@
 $LOAD_PATH << '.'
 
-require 'boostrap'
 require 'sinatra'
 require 'conf'
 

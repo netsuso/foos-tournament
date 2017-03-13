@@ -3,7 +3,7 @@ require 'net/http'
 module Foostastic
   class Webhook
     def run
-      url = ENV["FOOSTASTIC_API_URL"] || false
+      url = Conf.settings.webhook_url
       return unless url
       response = Net::HTTP.get_response(URI(url))
       if response.code != '200'
