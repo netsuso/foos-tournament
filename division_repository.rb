@@ -100,6 +100,14 @@ def get_player_absences(division_id)
   return absences
 end
 
+def add_absence(division_id, player_id, round)
+  record = DataModel::Absence.new()
+  record.division_id = division_id
+  record.player_id = player_id
+  record.round = round
+  record.save()
+end
+
 def update_absences(division_id, new_absences_data)
   current_absence_records = DataModel::Absence.all(DataModel::Absence.division_id => division_id)
 
