@@ -1,7 +1,7 @@
 # Reads a list of player_id from stdin (one by line) and adds an
 # absence for those players for the next round in their division
 
-$LOAD_PATH << '../foos-tournament'
+$LOAD_PATH << '..'
 
 require 'season_repository'
 require 'division_repository'
