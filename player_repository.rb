@@ -47,7 +47,7 @@ end
 def add(player_entity)
   player_record = DataModel::Player.new()
   player_record.name = player_entity.name
-  player_record.email = player_entity.email
+  player_record.nick = player_entity.nick
   player_record.save
   player_entity.id = player_record.id
   return player_record.id
@@ -56,7 +56,7 @@ end
 private
 
 def map_record_to_entity(player_record)
-  player_entity = Player.new(player_record.id, player_record.name, player_record.email)
+  player_entity = Player.new(player_record.id, player_record.name, player_record.nick)
 end
 
 end

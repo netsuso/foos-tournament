@@ -2,12 +2,12 @@ class Player
 
 attr_accessor :id
 attr_reader :name
-attr_reader :email
+attr_reader :nick
 
-def initialize(id, name, email)
+def initialize(id, name, nick)
   @id = id
   @name = name
-  @email = email
+  @nick = nick
 end
 
 end

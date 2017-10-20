@@ -50,7 +50,7 @@ class Player
   has n, :divisions, :through => :divisionplayers
 
   property :name,      String
-  property :email,     String
+  property :nick,     String
 end
 
 class Absence

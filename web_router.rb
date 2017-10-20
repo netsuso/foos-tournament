@@ -461,7 +461,7 @@ def division2api(d)
 end
 
 def player2api(p)
-  response = { 'name' => p.name }
+  response = { 'name' => p.name, 'nick' => p.nick }
   return response
 end
 
