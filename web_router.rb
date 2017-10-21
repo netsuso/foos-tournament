@@ -4,14 +4,14 @@ require 'sinatra'
 require 'conf'
 
 require 'tilt/erb'
+require 'json'
 
 require 'season_repository'
 require 'division_repository'
 require 'match_repository'
 require 'player_repository'
 require 'result_processor'
-require 'json'
-require 'foostastic'
+require 'hook_manager'
 
 get '/' do
   season_repo = SeasonRepository.new()
@@ -409,8 +409,7 @@ post '/api/set_result' do
   if result == false
     json_api({'result' => 'Match result already processed'})
   else
-    foostastic_webhook = Foostastic::Webhook.new
-    foostastic_webhook.run!
+    HookManager.match_played(data['id'])
     json_api({'result' => 'Match result correctly processed'})
   end
 end

@@ -2,6 +2,7 @@ $LOAD_PATH << '..'
 
 require 'division_repository'
 require 'match_repository'
+require 'hook_manager'
 
 if ARGV.length == 0
   puts "Missing match id argument"
@@ -37,3 +38,6 @@ division_repo.update(d)
 puts "Setting match as cancelled..."
 m.set_status(1)
 match_repo.update(m)
+
+puts "Running hooks..."
+HookManager.match_cancelled(match_id)
