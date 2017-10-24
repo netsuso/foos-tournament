@@ -3,7 +3,7 @@ require 'net/http'
 module HookManager
 
 def self.match_played(match_id)
-  hooks = Conf.settings.hooks.match_played
+  hooks = Conf.settings.hooks['match_played']
   params = { 'match_id' => match_id }
   run_hooks(hooks, params)
 end
@@ -16,7 +16,7 @@ end
 
 def self.run_hooks(hooks, params)
   hooks.each do |hook|
-    if hook['type'] == 'web'
+    if hook['type'] == 'http'
       hook_web(hook['url'], params)
     elsif hook['type'] == 'exec'
       hook_exec(hook['command'], params)
@@ -32,11 +32,24 @@ def self.hook_exec(command, params)
   result = `#{command_line}`
 end
 
-def self.hook_web(url, params)
-  # TODO: add parameters to the post and process errors better
-  response = Net::HTTP.get_response(URI(url))
-  if response.code != '200'
-    raise "HTTP GET to #{uri.to_s} failed with error #{response.code}"
+# TODO: improve error handling
+def self.hook_web(url, params, method='GET')
+  uri = URI(url)
+  begin
+    if method == 'GET'
+      uri.query = URI.encode_www_form(params)
+      response = Net::HTTP.get_response(uri)
+    else
+      response = Net::HTTP.post_form(uri, params)
+    end
+  rescue Exception => e
+    puts "HTTP POST to #{uri.to_s} failed"
+    return
+  end
+  if response.code == '200'
+    puts "HTTP POST to #{uri.to_s} executed correctly"
+  else
+    puts "HTTP POST to #{uri.to_s} failed with error #{response.code}"
   end
 end
 
