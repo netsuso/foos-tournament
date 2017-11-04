@@ -33,15 +33,10 @@ def self.hook_exec(command, params)
 end
 
 # TODO: improve error handling
-def self.hook_web(url, params, method='GET')
+def self.hook_web(url, params)
   uri = URI(url)
   begin
-    if method == 'GET'
-      uri.query = URI.encode_www_form(params)
-      response = Net::HTTP.get_response(uri)
-    else
-      response = Net::HTTP.post_form(uri, params)
-    end
+    response = Net::HTTP.post_form(uri, params)
   rescue Exception => e
     puts "HTTP POST to #{uri.to_s} failed"
     return
