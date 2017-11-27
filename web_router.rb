@@ -344,7 +344,9 @@ end
 get %r{/api/v1/matches/(?<match_id>\d+)/?$} do
   match_repo = MatchRepository.new()
   match = match_repo.get(params[:match_id].to_i)
-  match.calculate_victories()
+  if match.played?
+    match.calculate_victories()
+  end
   response = match2api(match)
 
   json_api(response)
