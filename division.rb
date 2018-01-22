@@ -8,12 +8,12 @@ attr_reader :total_rounds
 attr_accessor :current_round
 attr_reader :players
 attr_reader :total_matches
-attr_accessor :planned_matches
-attr_reader :absences
+attr_accessor :assign_deviation
+attr_reader :round_players
 
 @analysis_cache = nil
 
-def initialize(id, level, name, scoring, total_rounds, current_round, players, total_matches, planned_matches, absences, matches)
+def initialize(id, level, name, scoring, total_rounds, current_round, players, total_matches, assign_deviation, round_players, matches)
   @id = id
   @level = level
   @name = name
@@ -22,8 +22,8 @@ def initialize(id, level, name, scoring, total_rounds, current_round, players, t
   @current_round = current_round
   @players = players
   @total_matches = total_matches
-  @planned_matches = planned_matches
-  @absences = absences
+  @assign_deviation = assign_deviation
+  @round_players = round_players
   @matches = matches
 end
 

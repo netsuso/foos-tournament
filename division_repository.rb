@@ -18,9 +18,9 @@ def get(division_id)
   match_repo = MatchRepository.new()
   matches = match_repo.get_division_matches(division_id)
 
-  (total_matches, planned_matches) = get_division_players_data(division_id)
+  (total_matches, assign_deviation) = get_division_players_data(division_id)
 
-  absences = get_player_absences(division_id)
+  round_players = get_round_players(division_id)
 
   division_entity = Division.new(
     division_id,
@@ -31,8 +31,8 @@ def get(division_id)
     division_record.current_round,
     players,
     total_matches,
-    planned_matches,
-    absences,
+    assign_deviation,
+    round_players,
     matches
   )
   return division_entity
@@ -90,68 +90,44 @@ def update(division_entity)
   end
 end
 
-def get_player_absences(division_id)
-  absences = {}
-  absence_records = DataModel::Absence.all(DataModel::Absence.division_id => division_id)
-  absence_records.each do |a|
-    absences[a.player_id] = [] if not absences.key?(a.player_id)
-    absences[a.player_id] << a.round
+def get_round_players(division_id)
+  round_players = {}
+  round_players_records = DataModel::Roundplayer.all(DataModel::Roundplayer.division_id => division_id)
+  round_players_records.each do |a|
+    round_players[a.round] = {} if not round_players.key?(a.round)
+    round_players[a.round][a.player_id] = a.matches
   end
-  return absences
+  return round_players
 end
 
-def add_absence(division_id, player_id, round)
-  record = DataModel::Absence.new()
+def add_round_player(division_id, player_id, round, matches)
+  record = DataModel::Roundplayer.new()
   record.division_id = division_id
   record.player_id = player_id
   record.round = round
+  record.matches = matches
   record.save()
-end
-
-def update_absences(division_id, new_absences_data)
-  current_absence_records = DataModel::Absence.all(DataModel::Absence.division_id => division_id)
-
-  # First detect existing records that no longer exist
-  current_absence_records.each do |record|
-    p = record.player_id
-    if not new_absences_data.key?(p) or not new_absences_data[p].include?(record.round)
-      record.destroy()
-    else
-      new_absences_data[p].delete(record.round)
-    end
-  end
-
-  # Then create the newly added records
-  new_absences_data.keys().each do |p|
-    new_absences_data[p].each do |round|
-      record = DataModel::Absence.new()
-      record.division_id = division_id
-      record.player_id = p
-      record.round = round
-      record.save()
-    end
-  end
 end
 
 private
 
 def get_division_players_data(division_id)
   total_matches = {}
-  planned_matches = {}
+  assign_deviation = {}
   division_players = DataModel::Divisionplayer.all(DataModel::Divisionplayer.division_id => division_id)
   division_players.each do |dp|
     total_matches[dp.player_id] = dp.total_matches
-    planned_matches[dp.player_id] = dp.planned_matches
+    assign_deviation[dp.player_id] = dp.assign_deviation
   end
-  return [total_matches, planned_matches]
+  return [total_matches, assign_deviation]
 end
 
 def map_entity_to_record(division_entity, division_record, divisionplayer_records)
   division_record.current_round = division_entity.current_round
-  planned_matches = division_entity.planned_matches
+  assign_deviation = division_entity.assign_deviation
   divisionplayer_records.each do |dp_record|
     player_id = dp_record.player_id
-    dp_record.planned_matches = planned_matches[player_id]
+    dp_record.assign_deviation = assign_deviation[player_id]
   end
 end
 

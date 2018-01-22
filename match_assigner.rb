@@ -9,15 +9,15 @@ class MatchAssigner
 def assign_matches(division)
   total_rounds = division.total_rounds
   current_round = division.current_round
-  total_matches = division.total_matches
-  planned_matches = division.planned_matches
-  assigned_matches = division.get_assigned_nmatches()
-  absences = division.absences
+  player_ids = division.get_player_ids()
+  assign_deviation = division.assign_deviation
+  round_players = division.round_players
 
   to_play = {}
   total_rivals = 0
   adjustment_add = []
   adjustment_remove = []
+  max_to_play = 0
 
   current_round = 0 if current_round == nil
 
@@ -26,40 +26,59 @@ def assign_matches(division)
   end
 
   current_round += 1
+  if not round_players.key?(current_round)
+    raise 'No round players info for round %d' % current_round
+  end
   division.current_round = current_round
 
   puts "Round #{current_round}/#{total_rounds}"
 
-  max_to_play = 0
-  absents = []
-  total_matches.keys().each do |p|
-    future_absences = 0
-    if absences.key?(p)
-      if absences[p].include?(current_round)
-        puts "Player %3d: ABSENT" % p
-        to_play[p] = 0
-        absents << p
-        next
-      end
-      future_absences = absences[p].count { |x| x > current_round }
+  player_ids.each do |p|
+    if not round_players[current_round].key?(p)
+      puts "Player %3d: 0 (no data)" % p
+      to_play[p] = 0
+      next
     end
-    pending_rounds = total_rounds - current_round+1 - future_absences
-    matches_per_round = (total_matches[p] - planned_matches[p]) / pending_rounds
-    old_planned = planned_matches[p]
-    planned_matches[p] += matches_per_round
-
-    target = planned_matches[p].round()
-    to_play[p] = target - assigned_matches[p]
-    max_to_play = to_play[p] if to_play[p] > max_to_play
+    target = round_players[current_round][p]
+    damage_add = 0
+    damage_remove = 0
+    if assign_deviation[p]
+      damage_add += 10 * assign_deviation[p]
+      damage_remove += 10 * assign_deviation[p]
+    end
+    if target == 30
+      damage_add += 50000
+      damage_remove += 100
+    elsif target == 21
+      damage_add += 100
+      damage_remove += 10000
+    elsif target == 20
+      damage_add += 10000
+      damage_remove += 101
+    elsif target == 11
+      damage_add += 500
+      damage_remove += 11000
+    end
+    to_play[p] = target / 10
+    fallback = target % 10
+    if to_play[p] > 0
+      adjustment_remove << { :player => p, :to_play => target, :damage => damage_remove, :deviation => assign_deviation[p], :sort_value => [damage_remove, rand()] }
+      adjustment_add << { :player => p, :to_play => target, :damage => damage_add, :deviation => assign_deviation[p], :sort_value => [damage_add, rand()] }
+    end
+    if fallback == 0
+      fallback_txt = '-'
+    elsif fallback == 1
+      fallback_txt = '+'
+    end
+    puts "Player %3d: %d%s" % [p, to_play[p], fallback_txt]
     total_rivals += to_play[p]
-
-    puts "Player %3d: %2d rounds - %2d total - %5.2f (%2d) -> %5.2f (%2d) = %d to play" % [p, pending_rounds, total_matches[p], old_planned, assigned_matches[p], planned_matches[p], target, to_play[p]]
+    max_to_play = to_play[p] if to_play[p] > max_to_play
   end
 
   while true
     total_matches_to_play = (total_rivals/4).floor()
     if max_to_play > total_matches_to_play
-	  to_play.keys().each do |p|
+        to_play.keys().each do |p|
         if to_play[p] > total_matches_to_play
           removed = to_play[p] - total_matches_to_play
           puts "Too many matches for player %d (%d for a total of %d matches), removing %d" % [p, to_play[p], total_matches_to_play, removed]
@@ -71,18 +90,6 @@ def assign_matches(division)
     else
       break
     end
-  end
-
-  total_matches.keys().each do |p|
-    next if absents.include?(p)
-
-    damage_remove = 0.5 + planned_matches[p] - (assigned_matches[p] + to_play[p])
-    damage_add = 1 - damage_remove
-
-    penalty_nmatches = 0.25 * total_rounds / total_matches[p]
-
-    adjustment_remove << { :player => p, :damage => damage_remove, :sort_value => [damage_remove + penalty_nmatches, -to_play[p], rand()] }
-    adjustment_add << { :player => p, :damage => damage_add, :sort_value => [damage_add + penalty_nmatches, to_play[p], rand()] }
   end
 
   uncomplete = total_rivals % 4
@@ -106,12 +113,14 @@ def assign_matches(division)
         p = pd[:player]
         puts "Adding match to player " + p.to_s
         to_play[p] += 1
+        assign_deviation[p] += 1
       end
     else
       sorted_adjustment_remove[0...to_remove].each do |pd|
         p = pd[:player]
         puts "Removing match to player " + p.to_s
         to_play[p] -= 1
+        assign_deviation[p] += 1
       end
     end
   end

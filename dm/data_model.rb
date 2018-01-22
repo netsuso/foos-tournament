@@ -39,7 +39,7 @@ class Divisionplayer
   belongs_to :player, :key => true
 
   property :total_matches,   Integer
-  property :planned_matches, Float
+  property :assign_deviation, Integer
 end
 
 class Player
@@ -53,7 +53,7 @@ class Player
   property :nick,     String
 end
 
-class Absence
+class Roundplayer
   include DataMapper::Resource
 
   property :id,    Serial
@@ -61,6 +61,7 @@ class Absence
   belongs_to :player
 
   property :round, Integer
+  property :matches, Integer
 end
 
 class Match
