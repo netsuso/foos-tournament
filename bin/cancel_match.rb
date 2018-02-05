@@ -21,20 +21,6 @@ if m.played?
   exit(1)
 end
 
-division_id = m.division_id
-d = division_repo.get(division_id)
-planned_matches = d.planned_matches
-assigned_matches = d.get_assigned_nmatches()
-
-players.each do |player_id|
-  new_planned = assigned_matches[player_id] - 1
-  puts "Player #{player_id} has #{assigned_matches[player_id]} assigned matches and #{planned_matches[player_id]} planned. Resetting to #{new_planned}"
-  planned_matches[player_id] = new_planned
-end
-
-puts "Updating division data..."
-division_repo.update(d)
-
 puts "Setting match as cancelled..."
 m.set_status(1)
 match_repo.update(m)
