@@ -1,15 +1,18 @@
+<!-- Title and widget -->
 <div class="col-md-4">
   <h1 class="Heading">Summary</h1>
 
-  <!-- TODO: Racha de victorias
-  <div class="WinStreak">
-    <h2>Mejores rachas de victorias</h2>
+  <div class="Widget">
+    <div class="Widget-title">
+      <h2><span>Mejores</span> <span>rachas de</span> <span>victorias</span></h2>
+    </div>
 
-    <div class="WinStreak-ranking"></div>
+    <div class="Widget-content Ranking">
+    </div>
   </div>
-  -->
 </div>
 
+<!-- Rankings -->
 <div class="col-md-5 col-md-offset-1">
   <div class="SummaryTables">
     <div class="SummaryTables-selector">
@@ -42,6 +45,7 @@
   </div>
 </div>
 
+<!-- Aside -->
 <aside class="Recents">
   <div class="Recents-toggler">
     <button onClick="javascript:toggleSidebar()">Partidos recientes</button>
@@ -79,76 +83,3 @@
     <% end %>
   </div>
 </aside>
-
-<!--
-<div class="col-md-12">
-  <h4>Recently finished matches</h4>
-  <table class="table table-striped table-condensed">
-    <tr>
-      <th>Time</th>
-      <th>Division</th>
-      <th>Player 1</th>
-      <th></th>
-      <th>Player 2</th>
-      <th></th>
-      <th>Player 3</th>
-      <th></th>
-      <th>Player 4</th>
-      <th></th>
-      <th class="text-center">Details</th>
-      <th class="text-center">Duration</th>
-    </tr>
-    <% @recent_matches.each do |m| %>
-      <tr>
-        <td><%= m.get_time() %></td>
-        <td><%= @division_data[m.division_id][:name] %></td>
-        <td><%= @players[m.players[0]].name %></td><td><%= m.victories[0] %></td>
-        <td><%= @players[m.players[1]].name %></td><td><%= m.victories[1] %></td>
-        <td><%= @players[m.players[2]].name %></td><td><%= m.victories[2] %></td>
-        <td><%= @players[m.players[3]].name %></td><td><%= m.victories[3] %></td>
-        <td class="text-center">
-          <button class="btn btn-default btn-xs match-result-popover" data-toggle="popover" data-content="
-            <table class='table table-condensed table-borderless'>
-              <tr>
-                <td class='text-right'><%= @players[m.players[0]].name %> + <%= @players[m.players[1]].name %></td>
-                <td><%= m.scores[0][0].to_s %>-<%= m.scores[0][1].to_s %></td>
-                <td><%= @players[m.players[2]].name %> + <%= @players[m.players[3]].name %></td>
-              </tr>
-              <tr>
-                <td class='text-right'><%= @players[m.players[0]].name %> + <%= @players[m.players[2]].name %></td>
-                <td><%= m.scores[1][0].to_s %>-<%= m.scores[1][1].to_s %></td>
-                <td><%= @players[m.players[1]].name %> + <%= @players[m.players[3]].name %></td>
-              </tr>
-              <tr>
-                <td class='text-right'><%= @players[m.players[0]].name %> + <%= @players[m.players[3]].name %></td>
-                <td><%= m.scores[2][0].to_s %>-<%= m.scores[2][1].to_s %></td>
-                <td><%= @players[m.players[1]].name %> + <%= @players[m.players[2]].name %></td>
-              </tr>
-            </table>
-          ">Details</button>
-        </td>
-        <td class="text-center"><%= m.get_duration() %></td>
-      </tr>
-    <% end %>
-  </table>
-</div>
-
-<% @division_data.each do |id, data| %>
-  <div class="col-md-3">
-    <h4><%= data[:name] %></h4>
-    <table class="table table-condensed">
-      <tr>
-        <th class="col-md-1 text-right">Pos</th>
-        <th class="col-md-4 text-left">Player</th>
-        <th class="col-md-2 text-right">Points</th>
-      </tr>
-      <% data[:classification].each do |c| %>
-        <tr>
-          <td class="text-right"><%= c[:position] %></td><td class="text-left"><%= @players[c[:player_id]].name %></td>
-          <td class="text-right"><span title="<%= "#{'%.2f' % c[:points]}" %>"><%= "#{'%.0f' % c[:points]}" %></span></td>
-        </tr>
-      <% end %>
-    </table>
-  </div>
-<% end %>
--->

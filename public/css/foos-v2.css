@@ -529,6 +529,7 @@ aside.active {
 /* Widget */
 .Widget {
   margin-top: 120px;
+  margin-bottom: 40px;
 }
 
 .Widget-title h2,
@@ -600,6 +601,40 @@ aside.active {
   border: none;
   border-radius: 4px;
   font-size: 24px;
+}
+
+/* Ranking */
+.Ranking ul {
+  margin: 0;
+  padding: 0;
+}
+
+.Ranking-element {
+  border: 2px solid rgba(239, 239, 239, 0.15);
+  border-radius: 4px;
+  color: white;
+  font-size: 16px;
+  list-style: none;
+  margin: 4px auto;
+  padding: 12px;
+  width: 100%;
+  transition: border 0.3s;
+}
+
+.Ranking-element:hover {
+  border-color: #0ada7c;
+}
+
+.Ranking-element .Ranking-logo {
+  display: inline-block;
+  height: 40px;
+  width: 40px;
+  margin-right: 20px;
+}
+
+.Ranking-element .Ranking-counter {
+  float: right;
+  margin-top: 8px;
 }
 
 /* Only mobile (tablet vertical) */
