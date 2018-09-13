@@ -61,7 +61,7 @@
   <!-- Ranking -->
   <div class="col-md-7">
     <div class="Division-tableWrapper">
-      <table class="Table Division-table">
+      <table class="Table Table--withActions Division-table">
         <tr>
           <th class="col-md-1 text-right"></th>
           <th class="col-md-4 text-left"></th>
@@ -79,7 +79,7 @@
 
             <!-- Name -->
             <td class="text-left">
-              <a href="#" class="player-details" data-toggle="modal" data-target="#player-modal" data-division-id="<%= @division_id %>" data-player-id="<%= c[:player_id] %>"><%= @players[c[:player_id]].name %></a>
+              <%= @players[c[:player_id]].name %>
             </td>
 
             <!-- Matches -->
@@ -91,6 +91,17 @@
             <!-- Points -->
             <td class="text-right Weight-bold" title="<%= "#{'%.2f' % c[:points]}" %>">
               <%= "#{'%.0f' % c[:points]}" %>
+            </td>
+
+            <td class="Table-rowActions" colspan="5">
+              <button
+                class="player-details"
+                data-toggle="modal"
+                data-target="#player-modal"
+                data-division-id="<%= @division_id %>"
+                data-player-id="<%= c[:player_id] %>"
+              >Ver partidos</button>
+              <button>Ver detalles</button>
             </td>
           </tr>
         <% end %>
@@ -107,9 +118,9 @@
   <!-- History -->
   <div class="col-md-11">
     <div class="Division-tableWrapper">
-      <table class="Table">
+      <table class="Table Table--withActions Table--noMinWidth">
         <tr>
-          <th class="text-right">Time</th>
+          <th class="text-right" style="width: 125px">Time</th>
           <th>Player 1</th>
           <th></th>
           <th>Player 2</th>
@@ -118,7 +129,7 @@
           <th></th>
           <th>Player 4</th>
           <th></th>
-          <th></th>
+          <th class="text-center"><i class="glyphicon glyphicon-time"></i></th>
         </tr>
 
         <% @finished_matches.each do |m| %>
@@ -133,6 +144,39 @@
             <td><%= @players[m.players[3]].name %></td>
             <td><%= m.victories[3] %></td>
             <td class="text-center"><%= m.get_duration() %></td>
+            <td class="Table-rowActions" colspan="10">
+              <button
+                type="button"
+                data-toggle="modal"
+                data-target="#history-modal"
+                data-division-id="<%= @division_id %>"
+                data-match-id="<%= m.id %>"
+              >Ver historial</button>
+
+              <button
+                class="match-result-popover"
+                data-toggle="popover"
+                data-content="
+                  <table class='Table'>
+                    <tr>
+                      <td class='text-right'><%= @players[m.players[0]].name %> + <%= @players[m.players[1]].name %></td>
+                      <td><%= m.scores[0][0].to_s %>-<%= m.scores[0][1].to_s %></td>
+                      <td><%= @players[m.players[2]].name %> + <%= @players[m.players[3]].name %></td>
+                    </tr>
+                    <tr>
+                      <td class='text-right'><%= @players[m.players[0]].name %> + <%= @players[m.players[2]].name %></td>
+                      <td><%= m.scores[1][0].to_s %>-<%= m.scores[1][1].to_s %></td>
+                      <td><%= @players[m.players[1]].name %> + <%= @players[m.players[3]].name %></td>
+                    </tr>
+                    <tr>
+                      <td class='text-right'><%= @players[m.players[0]].name %> + <%= @players[m.players[3]].name %></td>
+                      <td><%= m.scores[2][0].to_s %>-<%= m.scores[2][1].to_s %></td>
+                      <td><%= @players[m.players[1]].name %> + <%= @players[m.players[2]].name %></td>
+                    </tr>
+                  </table>
+                "
+              >Ver resultados</button>
+            </td>
           </tr>
         <% end %>
       </table>
@@ -172,19 +216,20 @@
           </div>
         </div>
         <div class="Match-cta">
-          <button><i class="glyphicon glyphicon-record"></i> Watch</button>
+          <button><i class="glyphicon glyphicon-record"></i> Ver partido</button>
         </div>
       </div>
     <% end %>
   </div>
 </aside>
 
+<!-- Simulate match -->
 <div class="modal" id="simulator-modal" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-        <h4 class="modal-title" id="simulator-title">Match predictor</h4>
+        <h4 class="modal-title" id="simulator-title">Simular partido</h4>
       </div>
       <div class="modal-body container" id="simulator-content">
       </div>
@@ -192,12 +237,13 @@
   </div>
 </div>
 
+<!-- History -->
 <div class="modal" id="history-modal" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-        <h4 class="modal-title" id="history-title">Classification history</h4>
+        <h4 class="modal-title" id="history-title">Historial</h4>
       </div>
       <div class="modal-body container" id="history-content">
       </div>
@@ -205,12 +251,13 @@
   </div>
 </div>
 
+<!-- Player details -->
 <div class="modal" id="player-modal" tabindex="-1">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-        <h4 class="modal-title" id="player-title">Player details</h4>
+        <h4 class="modal-title" id="player-title">Detalles del jugador</h4>
       </div>
       <div class="modal-body container" id="player-content">
       </div>

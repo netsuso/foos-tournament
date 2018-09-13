@@ -1,6 +1,6 @@
 class Match
 
-attr_accessor :id 
+attr_accessor :id
 attr_reader :division_id
 attr_reader :round
 attr_reader :players
@@ -73,7 +73,7 @@ end
 
 # FIXME: The human version should be generated in FE, not here
 def get_time()
-  return @time.strftime("%Y/%m/%d %H:%M")
+  return @time.strftime("%m/%d %H:%M")
 end
 
 # FIXME: The human version should be generated in FE, not here

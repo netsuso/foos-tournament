@@ -12,27 +12,27 @@
           <li><a href="#" class="history-last"><span class="glyphicon glyphicon-fast-forward"></span></a></li>
         </ul>
 
-        <table class="table table-borderless table-condensed">
+        <table class="Table Table--condensed">
           <tr>
-            <th class="text-center col-md-6">Player</th>
-            <th class="text-center col-md-6"># Wins</th>
+            <th class="text-left col-md-6">Player</th>
+            <th class="text-right col-md-6">Wins</th>
           </tr>
 
           <% (0..3).each do |p| %>
-            <% if @classification_history[i][:highlight].key?(@classification_history[i][:match].players[p]) %>
-              <tr class="active">
-            <% else %>
-              <tr>
-            <% end %>
-              <td class="text-center"><%= @players[@classification_history[i][:match].players[p]].name %></td>
-              <td class="text-center"><%= @classification_history[i][:match].victories[p] %></td>
+            <tr>
+              <td class="text-left">
+                <%= @players[@classification_history[i][:match].players[p]].name %>
+              </td>
+              <td class="text-right">
+                <%= @classification_history[i][:match].victories[p] %>
+              </td>
             </tr>
           <% end %>
         </table>
       </div>
 
       <div class="col-md-4">
-        <table class="table table-super-condensed table-borderless">
+        <table class="Table Table--condensed">
           <% @classification_history[i][:before].each do |c| %>
             <% if @classification_history[i][:highlight].key?(c[:player_id]) %>
               <tr class="active">
@@ -47,7 +47,7 @@
       </div>
 
       <div class="col-md-4">
-        <table class="table table-super-condensed table-borderless">
+        <table class="Table Table--condensed">
           <% @classification_history[i][:after].each do |c| %>
             <% if @classification_history[i][:highlight].key?(c[:player_id]) %>
               <% if @classification_history[i][:highlight][c[:player_id]] == :up %>

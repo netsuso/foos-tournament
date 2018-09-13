@@ -13,6 +13,28 @@
   src: url(../fonts/Montserrat-Bold.ttf);
 }
 
+/* OVERRIDES */
+.modal-content {
+  border-radius: 4px;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.navbar-default {
+  background-color: transparent;
+  background-image: linear-gradient(to top, rgba(20, 20, 20, 0), #111111);
+  border: none;
+}
+
+.popover {
+  border-radius: 4px !important;
+}
+
 /* Helpers */
 .Color-lightgrey {
   color: #b0b0b0 !important;
@@ -49,18 +71,6 @@ body {
 }
 
 /* Navigation */
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-}
-
-.navbar-default {
-  background-color: transparent;
-  background-image: linear-gradient(to top, rgba(20, 20, 20, 0), #111111);
-  border: none;
-}
 
 .Logo {
   border: 2px solid transparent;
@@ -142,11 +152,18 @@ body {
   background-color: #efefef;
 }
 
+.Table tr,
+.Table tr > th,
+.Table tr > td {
+  height: 54px;
+}
+
 .Table tr > td,
 .Table tr > th {
   font-size: 16px;
   padding: 16px;
   min-width: 64px;
+  overflow: hidden;
   vertical-align: top;
 }
 
@@ -158,11 +175,67 @@ body {
   font-family: Montserrat-light;
 }
 
+.Table.Table--noMinWidth tr > td,
+.Table.Table--noMinWidth tr > th {
+  min-width: 0;
+}
+
+.Table.Table--condensed tr,
+.Table.Table--condensed tr > td,
+.Table.Table--condensed tr > th {
+  height: auto;
+}
+
 .Table.Table--condensed tr > td,
 .Table.Table--condensed tr > th {
   font-size: 14px;
   padding: 4px 8px;
   min-width: 0;
+}
+
+.Table-rowActions {
+  background-color: #0ada7c;
+  display: none;
+  height: 54px;
+  padding: 0 !important;
+  text-align: center;
+}
+
+.Table-rowActions * {
+  background-color: transparent;
+  border: none;
+  color: white;
+  display: none;
+  font-family: Montserrat-bold;
+  font-size: 16px;
+  height: 100%;
+}
+
+.Table-rowActions button {
+  display: inline-block;
+}
+
+.Table-rowActions button:first-child:nth-last-child(1),
+.Table-rowActions button:first-child:nth-last-child(1) ~ button {
+  width: 100%;
+}
+
+.Table-rowActions button:first-child:nth-last-child(2),
+.Table-rowActions button:first-child:nth-last-child(2) ~ button {
+  width: 48%;
+}
+
+.Table-rowActions button:first-child:nth-last-child(3),
+.Table-rowActions button:first-child:nth-last-child(3) ~ button {
+  width: 32%;
+}
+
+.Table.Table--withActions tr:hover td {
+  display: none;
+}
+
+.Table.Table--withActions tr:hover td.Table-rowActions {
+  display: table-cell;
 }
 
 /* Aside */
@@ -351,6 +424,8 @@ aside.active {
 .Division-tableWrapper {
   background-color: white;
   padding: 24px;
+  overflow: hidden;
+  overflow-x: auto;
 }
 
 /* Recents */
@@ -475,6 +550,11 @@ aside.active {
 
 /* Only mobile (tablet vertical) */
 @media screen and (max-width: 1023px) {
+  .navbar {
+    background-color: black;
+    background-image: none;
+  }
+
   .container > .navbar-header > .navbar-toggle {
     margin-right: 47px;
   }
@@ -493,8 +573,6 @@ aside.active {
 
   .Division-tableWrapper {
     padding: 0;
-    overflow: hidden;
-    overflow-x: auto;
   }
 }
 
