@@ -110,16 +110,16 @@ body {
   color: white;
 }
 
-.navbar-default .navbar-nav > li > a > span {
+.navbar-default .navbar-nav > .tab-division > a > span {
   border-bottom: 2px solid transparent;
   padding-bottom: 4px;
   transition: border 0.3s;
 }
 
-.navbar-default .navbar-nav > li > a:focus > span,
+.navbar-default .navbar-nav > .tab-division > a:focus > span,
 .navbar-default .navbar-nav > .active > a:focus > span,
 .navbar-default .navbar-nav > .open > a:focus > span,
-.navbar-default .navbar-nav > li > a:hover > span,
+.navbar-default .navbar-nav > .tab-division > a:hover > span,
 .navbar-default .navbar-nav > .active > a:hover > span,
 .navbar-default .navbar-nav > .open > a:hover > span {
   border-bottom-color: #0ada7c;
@@ -137,7 +137,6 @@ body {
 
 /* Table */
 .Table {
-  background-color: white;
   color: black;
   width: 100%;
 }
@@ -230,12 +229,65 @@ body {
   width: 32%;
 }
 
-.Table.Table--withActions tr:hover td {
+.Table.Table--withActions > tbody > tr:hover > td {
   display: none;
 }
 
-.Table.Table--withActions tr:hover td.Table-rowActions {
+.Table.Table--withActions > tbody > tr:hover > td.Table-rowActions {
   display: table-cell;
+}
+
+.Table .Table-details {
+  display: none;
+}
+
+.Table.Table--withDetails > tbody > tr.active > td {
+  display: none;
+}
+
+.Table.Table--withDetails > tbody > tr.active > td.Table-details {
+  display: table-cell;
+}
+
+.Table.Table--withActions.Table.Table--withDetails > tbody > tr.active:hover > td.Table-rowActions {
+  display: none;
+}
+
+.Table-closeDetails {
+  background-color: transparent;
+  border: none;
+  color: black;
+  height: 24px;
+  width: 24px;
+}
+
+/* Dropdown */
+.Dropdown-toggle {
+  padding: 16px;
+}
+
+.dropdown.open .Dropdown-toggle {
+  background-color: white;
+  color: black;
+}
+
+.navbar-nav > li > .dropdown-menu {
+  border-radius: 0;
+  margin-top: -32px;
+  margin-left: 45px;
+  min-width: 0;
+  width: calc(100% - 90px);
+}
+
+.dropdown-menu > li > a {
+  font-family: Montserrat-bold;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.dropdown-menu > li > a:hover {
+  background-color: #0ada7c;
+  color: white;
 }
 
 /* Aside */
@@ -339,6 +391,7 @@ aside.active {
 
 /* Summary */
 .SummaryTables {
+  background-color: #efefef;
   bottom: 0;
   display: inline-block;
   height: calc(100vh - 112px);
@@ -375,6 +428,7 @@ aside.active {
 }
 
 .SummaryTables-division {
+  background-color: white;
   display: none;
   width: calc(100% - 72px);
 }

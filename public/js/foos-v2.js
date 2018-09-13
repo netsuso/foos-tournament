@@ -133,6 +133,16 @@ function showNextWidgetItem() {
   }
 }
 
+function closePlayerDetails() {
+  $(".Table--withDetails tr").removeClass("active");
+}
+
+function showPlayerDetails(playerId) {
+  closePlayerDetails();
+  const row = $(".Table tr[data-id=" + playerId + "]");
+  row[0].classList.add("active");
+}
+
 var summary = {
   activeDivision: undefined,
   selectDivision: function(divisionId) {

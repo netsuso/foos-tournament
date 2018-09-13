@@ -30,10 +30,18 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul id="v2-season-selector" class="nav navbar-nav">
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span id="season-selected"></span><span class="caret"></span></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                <span class="Dropdown-toggle">
+                  <span id="season-selected"></span>
+                  <span class="caret"></span>
+                </span>
+              </a>
+
               <ul class="dropdown-menu">
                 <% @seasons.each do |s| %>
-                  <li><a href="#" class="season-selector" data-season-id="<%= s.id %>"><%= s.title %></a></li>
+                  <li>
+                    <a href="#" class="season-selector" data-season-id="<%= s.id %>"><%= s.title %></a>
+                  </li>
                 <% end %>
               </ul>
             </li>

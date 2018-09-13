@@ -61,7 +61,7 @@
   <!-- Ranking -->
   <div class="col-md-7">
     <div class="Division-tableWrapper">
-      <table class="Table Table--withActions Division-table">
+      <table class="Table Table--withActions Table--withDetails Division-table">
         <tr>
           <th class="col-md-1 text-right"></th>
           <th class="col-md-4 text-left"></th>
@@ -71,7 +71,7 @@
         </tr>
 
         <% @classification.each do |c| %>
-          <tr>
+          <tr data-id="<%= c[:player_id] %>">
             <!-- Position -->
             <td class="text-right">
               <span class="before"></span> <%= c[:position] %>
@@ -101,7 +101,47 @@
                 data-division-id="<%= @division_id %>"
                 data-player-id="<%= c[:player_id] %>"
               >Ver partidos</button>
-              <button>Ver detalles</button>
+
+              <button onClick="javascript:showPlayerDetails(<%= c[:player_id] %>)">Ver detalles</button>
+            </td>
+
+            <td class="Table-details" colspan="5">
+              <table class="Table Table--condensed">
+                <tr>
+                  <th colspan="3">Detalles de <%= @players[c[:player_id]].name %></th>
+                  <th class="text-right">
+                    <button class="Table-closeDetails" onClick="javascript:closePlayerDetails()">
+                      <i class="glyphicon glyphicon-remove"></i>
+                    </button>
+                  </th>
+                </tr>
+                <tr>
+                  <th>Rival</th>
+                  <th class="text-right">Victories</th>
+                  <th class="text-right">Defeats</th>
+                  <th class="text-right">Points</th>
+                </tr>
+
+                <% @rivals.each do |p, data| %>
+                  <% if p == c[:player_id] %>
+                      <% data.each do |points, victories, defeats, r| %>
+                        <% if points == -1 %>
+                          <tr>
+                            <td><%= @players[r].name %></td>
+                            <td class="text-center" colspan="3">No matches yet</td>
+                          </tr>
+                        <% else %>
+                          <tr>
+                            <td><%= @players[r].name %></td>
+                            <td class="text-right"><%= victories %></td>
+                            <td class="text-right"><%= defeats %></td>
+                            <td class="text-right Weight-bold" title="<%= "#{'%.2f' % points}" %>"><%= "#{'%.0f' % points}" %></td>
+                          </tr>
+                        <% end %>
+                      <% end %>
+                  <% end %>
+                <% end %>
+              </table>
             </td>
           </tr>
         <% end %>
