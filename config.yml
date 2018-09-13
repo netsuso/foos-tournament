@@ -1,0 +1,11 @@
+db_uri: "sqlite:///home/rperez/dev/foos/foos-tournament/foos.db"
+api_key: API_KEY_HERE
+hooks:
+  match_played:
+    - type: http
+      url: URL
+    - type: exec
+      command: COMMAND
+  match_cancelled:
+    - type: exec
+      command: COMMAND

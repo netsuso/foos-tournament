@@ -1,0 +1,209 @@
+@font-face {
+  font-family: Montserrat;
+  src: url(../fonts/Montserrat-Regular.ttf);
+}
+
+@font-face {
+  font-family: Montserrat-bold;
+  src: url(../fonts/Montserrat-Bold.ttf);
+}
+
+* {
+  font-family: Montserrat;
+  font-size: 14px;
+  color: white;
+  box-sizing: border-box;
+}
+
+body {
+  background: black;
+  margin: 0;
+  padding: 0;
+}
+
+.Color-lightgrey {
+  color: #b0b0b0 !important;
+}
+
+.Weight-light {
+  font-weight: 300;
+}
+
+.Weight-bold {
+  font-weight: 700;
+}
+
+table tr > td,
+table tr > th {
+  padding: 16px;
+  font-size: 16px;
+}
+
+table tr > th {
+  font-weight: bold;
+}
+
+.navbar-default {
+  background-color: black;
+  border: none;
+}
+
+.Logo {
+  border: 2px solid transparent;
+  border-radius: 50%;
+  height: 42px;
+  margin-top: -10px;
+  padding: 4px;
+  width: 42px;
+  transition: border 0.3s;
+}
+
+.navbar-brand:hover .Logo {
+  border-color: #0ada7c;
+}
+
+.navbar-default .navbar-nav > li > a {
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 46px;
+  background-color: transparent;
+  color: white;
+}
+
+.navbar-default .navbar-nav > li > a,
+.navbar-default .navbar-nav > li > a:active,
+.navbar-default .navbar-nav > li > a:focus,
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:active,
+.navbar-default .navbar-nav > .active > a:focus,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .open > a,
+.navbar-default .navbar-nav > .open > a:active,
+.navbar-default .navbar-nav > .open > a:focus,
+.navbar-default .navbar-nav > .open > a:hover {
+  background-color: transparent;
+  color: white;
+}
+
+.navbar-default .navbar-nav > li > a > span {
+  border-bottom: 2px solid transparent;
+  padding-bottom: 4px;
+  transition: border 0.3s;
+}
+
+.navbar-default .navbar-nav > li > a:focus > span,
+.navbar-default .navbar-nav > .active > a:focus > span,
+.navbar-default .navbar-nav > .open > a:focus > span,
+.navbar-default .navbar-nav > li > a:hover > span,
+.navbar-default .navbar-nav > .active > a:hover > span,
+.navbar-default .navbar-nav > .open > a:hover > span {
+  border-bottom-color: #0ada7c;
+}
+
+.Heading {
+  font-family: Montserrat-bold;
+  font-size: 56px;
+}
+
+.SummaryTables {
+  bottom: 0;
+  display: inline-block;
+  height: calc(100vh - 112px);
+  left: 50%;
+  overflow: hidden;
+  overflow-y: auto;
+  position: fixed;
+  width: 408px;
+}
+
+.SummaryTables-selector,
+.SummaryTables-division {
+  float: left;
+  margin: 0;
+  padding: 0;
+  vertical-align: top;
+}
+
+.SummaryTables-selector {
+  width: 72px;
+}
+
+.SummaryTables-divisionSelector {
+  background: transparent;
+  border: none;
+  margin: 0;
+  padding: 0;
+  height: 72px;
+  width: 72px;
+}
+.SummaryTables-divisionSelector.active {
+  background-color: #0ada7c;
+}
+
+.SummaryTables-division {
+  background-color: white;
+  color: black;
+  display: none;
+  padding: 14px 10px;
+  width: calc(100% - 72px);
+}
+
+.SummaryTables-division * {
+  color: black;
+  border: none;
+  border-color: transparent;
+}
+
+.SummaryTables-division.active {
+  display: inline-block;
+}
+
+.SummaryTables-division tr td:nth-child(1) .before,
+.SummaryTables-division tr td:nth-child(1) .before {
+  float: left;
+  height: 22px;
+  position: relative;
+  text-align: left;
+  width: 4px;
+}
+
+.SummaryTables-division tr:nth-child(2) td:nth-child(1) .before,
+.SummaryTables-division tr:nth-child(3) td:nth-child(1) .before {
+  background-color: lightgreen;
+}
+
+.SummaryTables-division tr:nth-last-child(2) td:nth-child(1) .before,
+.SummaryTables-division tr:nth-last-child(1) td:nth-child(1) .before,
+.SummaryTables-division[data-name="Division 2"] tr:nth-last-child(4) td:nth-child(1) .before,
+.SummaryTables-division[data-name="Division 2"] tr:nth-last-child(3) td:nth-child(1) .before {
+  background-color: lightcoral;
+}
+
+.SummaryTables-division[data-name="Division 1"] tr:nth-child(3) td:nth-child(1) .before,
+.SummaryTables-division[data-name="Division 3A"] tr:nth-last-child(2) td:nth-child(1) .before,
+.SummaryTables-division[data-name="Division 3A"] tr:nth-last-child(1) td:nth-child(1) .before,
+.SummaryTables-division[data-name="Division 3B"] tr:nth-last-child(2) td:nth-child(1) .before,
+.SummaryTables-division[data-name="Division 3B"] tr:nth-last-child(1) td:nth-child(1) .before {
+  display: none;
+}
+
+@media screen and (max-width: 1023px) {
+  .SummaryTables {
+    left: initial;
+    bottom: initial;
+    height: auto;
+    position: relative;
+    width: 100%;
+  }
+
+  .SummaryTables-division {
+    overflow-x: auto;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .navbar-brand {
+    padding: 46px 30px;
+  }
+}

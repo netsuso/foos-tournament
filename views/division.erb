@@ -1,106 +1,179 @@
 <div class="col-md-12">
+  <div class="tab2-content tab2-content-classification">
+    <div class="col-md-6">
+      <table class="table table-condensed table-striped">
+        <tr>
+          <th class="col-md-1 text-right">Pos</th>
+          <th class="col-md-4 text-left">Player</th>
+          <th class="col-md-2 text-right">Points</th>
+          <th class="col-md-2 text-right"># Rivals</th>
+          <th class="col-md-2 text-right"># Matches</th>
+          <th>Detail</th>
+        </tr>
 
-<div class="tab2-content tab2-content-classification">
+        <% @classification.each do |c| %>
+          <tr>
+            <td class="text-right"><%= c[:position] %></td>
+            <td class="text-left">
+              <a href="#" class="player-details" data-toggle="modal" data-target="#player-modal" data-division-id="<%= @division_id %>" data-player-id="<%= c[:player_id] %>"><%= @players[c[:player_id]].name %></a>
+            </td>
+            <td class="text-right">
+              <span title="<%= "#{'%.2f' % c[:points]}" %>"><%= "#{'%.0f' % c[:points]}" %></span>
+            </td>
+            <td class="text-right"><%= c[:num_rivals] %></td>
+            <td class="text-right"><%= c[:num_matches] %><% if @total_matches[c[:player_id]] %> / <%= @total_matches[c[:player_id]] %><% end %></td>
+            <td class="text-right">
+              <a href="#" class="player-rivals" data-player-id="<%= c[:player_id] %>">
+                <span class="glyphicon glyphicon-triangle-right"></span>
+              </a>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
 
-<div class="col-md-6">
-<table class="table table-condensed table-striped">
-<tr><th class="col-md-1 text-right">Pos</th><th class="col-md-4 text-left">Player</th><th class="col-md-2 text-right">Points</th><th class="col-md-2 text-right"># Rivals</th><th class="col-md-2 text-right"># Matches</th><th>Detail</th></tr>
-<% @classification.each do |c| %>
-<tr><td class="text-right"><%= c[:position] %></td><td class="text-left"><a href="#" class="player-details" data-toggle="modal" data-target="#player-modal" data-division-id="<%= @division_id %>" data-player-id="<%= c[:player_id] %>"><%= @players[c[:player_id]].name %></a></td><td class="text-right"><span title="<%= "#{'%.2f' % c[:points]}" %>"><%= "#{'%.0f' % c[:points]}" %></span></td><td class="text-right"><%= c[:num_rivals] %></td><td class="text-right"><%= c[:num_matches] %><% if @total_matches[c[:player_id]] %> / <%= @total_matches[c[:player_id]] %><% end %></td><td class="text-right"><a href="#" class="player-rivals" data-player-id="<%= c[:player_id] %>"><span class="glyphicon glyphicon-triangle-right"></span></a></tr>
-<% end %>
-</table>
-</div>
+    <% @rivals.each do |p,data| %>
+      <div class="classification-detail col-md-6" id="classification-detail-<%= p %>" style="display: none">
+        <table class="table table-condensed">
+          <tr>
+            <th colspan="4">Classification details for <%= @players[p].name %></th>
+          </tr>
+          <tr>
+            <th>Rival</th>
+            <th class="text-right">Points</th>
+            <th class="text-right">Victories</th>
+            <th class="text-right">Defeats</th>
+          </tr>
 
-<% @rivals.each do |p,data| %>
-<div class="classification-detail col-md-6" id="classification-detail-<%= p %>" style="display: none">
-<table class="table table-condensed">
-<tr><th colspan="4">Classification details for <%= @players[p].name %></th></tr>
-<tr><th>Rival</th><th class="text-right">Points</th><th class="text-right">Victories</th><th class="text-right">Defeats</th></tr>
-<% data.each do |points, victories, defeats, r| %>
-<% if points == -1 %>
-<tr><td><%= @players[r].name %></td><td class="text-center" colspan="3">No matches yet</td></tr>
-<% else %>
-<tr><td><%= @players[r].name %></td><td class="text-right"><span title="<%= "#{'%.2f' % points}" %>"><%= "#{'%.0f' % points}" %></span></td><td class="text-right"><%= victories %></td><td class="text-right"><%= defeats %></td></tr>
-<% end %>
-<% end %>
-</table>
-</div>
-<% end %>
-
-</div>
-
-<div class="tab2-content tab2-content-matches">
-
-<div class="col-md-12">
-<h4>Matches pending to play</h4>
-<table class="table">
-<% @open_matches.each do |m| %>
-<tr>
-<td><%= @players[m.players[0]].name %></td>
-<td><%= @players[m.players[1]].name %></td>
-<td><%= @players[m.players[2]].name %></td>
-<td><%= @players[m.players[3]].name %></td>
-<td><button class="btn btn-default btn-xs" type="button" data-toggle="modal" data-target="#simulator-modal" data-match-id="<%= m.id %>">Predict</button></td>
-</tr>
-<% end %>
-</table>
-</div>
-
-<div class="col-md-12">
-<h4>Matches already played</h4>
-<table class="table table-striped table-condensed">
-<tr><th>Time</th><th>Player 1</th><th></th><th>Player 2</th><th></th><th>Player 3</th><th></th><th>Player 4</th><th></th><th class="text-center">Details</th><th class="text-center"><span class="glyphicon glyphicon-sort"></span></th><th class="text-center">Duration</th></tr>
-<% @finished_matches.each do |m| %>
-<tr>
-<td><%= m.get_time() %></td>
-<td><%= @players[m.players[0]].name %></td><td><%= m.victories[0] %></td>
-<td><%= @players[m.players[1]].name %></td><td><%= m.victories[1] %></td>
-<td><%= @players[m.players[2]].name %></td><td><%= m.victories[2] %></td>
-<td><%= @players[m.players[3]].name %></td><td><%= m.victories[3] %></td>
-<td class="text-center"><button class="btn btn-default btn-xs match-result-popover" data-toggle="popover" data-content="<table class='table table-condensed table-borderless'><tr><td class='text-right'><%= @players[m.players[0]].name %> + <%= @players[m.players[1]].name %></td><td><%= m.scores[0][0].to_s %>-<%= m.scores[0][1].to_s %></td><td><%= @players[m.players[2]].name %> + <%= @players[m.players[3]].name %></td></tr><tr><td class='text-right'><%= @players[m.players[0]].name %> + <%= @players[m.players[2]].name %></td><td><%= m.scores[1][0].to_s %>-<%= m.scores[1][1].to_s %></td><td><%= @players[m.players[1]].name %> + <%= @players[m.players[3]].name %></td></tr><tr><td class='text-right'><%= @players[m.players[0]].name %> + <%= @players[m.players[3]].name %></td><td><%= m.scores[2][0].to_s %>-<%= m.scores[2][1].to_s %></td><td><%= @players[m.players[1]].name %> + <%= @players[m.players[2]].name %></td></tr></table>">Details</button></td>
-<td class="text-center"><button class="btn btn-default btn-xs" type="button" data-toggle="modal" data-target="#history-modal" data-division-id="<%= @division_id %>" data-match-id="<%= m.id %>"><span class="glyphicon glyphicon-sort"></span></button>
-<td class="text-center"><%= m.get_duration() %></td>
-</tr>
-<% end %>
-</table>
-</div>
-
-</div>
-
-<div class="modal" id="simulator-modal" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-        <h4 class="modal-title" id="simulator-title">Match predictor</h4>
+          <% data.each do |points, victories, defeats, r| %>
+            <% if points == -1 %>
+              <tr>
+                <td><%= @players[r].name %></td>
+                <td class="text-center" colspan="3">No matches yet</td>
+              </tr>
+            <% else %>
+              <tr>
+                <td><%= @players[r].name %></td>
+                <td class="text-right">
+                  <span title="<%= "#{'%.2f' % points}" %>"><%= "#{'%.0f' % points}" %></span>
+                </td>
+                <td class="text-right"><%= victories %></td>
+                <td class="text-right"><%= defeats %></td>
+              </tr>
+            <% end %>
+          <% end %>
+        </table>
       </div>
-      <div class="modal-body container" id="simulator-content">
+    <% end %>
+  </div>
+
+  <div class="tab2-content tab2-content-matches">
+    <div class="col-md-12">
+      <h4>Matches pending to play</h4>
+      <table class="table">
+        <% @open_matches.each do |m| %>
+          <tr>
+            <td><%= @players[m.players[0]].name %></td>
+            <td><%= @players[m.players[1]].name %></td>
+            <td><%= @players[m.players[2]].name %></td>
+            <td><%= @players[m.players[3]].name %></td>
+            <td><button class="btn btn-default btn-xs" type="button" data-toggle="modal" data-target="#simulator-modal" data-match-id="<%= m.id %>">Predict</button></td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+
+    <div class="col-md-12">
+      <h4>Matches already played</h4>
+      <table class="table table-striped table-condensed">
+        <tr>
+          <th>Time</th>
+          <th>Player 1</th>
+          <th></th>
+          <th>Player 2</th>
+          <th></th>
+          <th>Player 3</th>
+          <th></th>
+          <th>Player 4</th>
+          <th></th>
+          <th class="text-center">Details</th>
+          <th class="text-center"><span class="glyphicon glyphicon-sort"></span></th>
+          <th class="text-center">Duration</th>
+        </tr>
+
+        <% @finished_matches.each do |m| %>
+          <tr>
+            <td><%= m.get_time() %></td>
+            <td><%= @players[m.players[0]].name %></td><td><%= m.victories[0] %></td>
+            <td><%= @players[m.players[1]].name %></td><td><%= m.victories[1] %></td>
+            <td><%= @players[m.players[2]].name %></td><td><%= m.victories[2] %></td>
+            <td><%= @players[m.players[3]].name %></td><td><%= m.victories[3] %></td>
+            <td class="text-center">
+              <button class="btn btn-default btn-xs match-result-popover" data-toggle="popover" data-content="
+                <table class='table table-condensed table-borderless'>
+                  <tr>
+                    <td class='text-right'><%= @players[m.players[0]].name %> + <%= @players[m.players[1]].name %></td>
+                    <td><%= m.scores[0][0].to_s %>-<%= m.scores[0][1].to_s %></td>
+                    <td><%= @players[m.players[2]].name %> + <%= @players[m.players[3]].name %></td>
+                  </tr>
+                  <tr>
+                    <td class='text-right'><%= @players[m.players[0]].name %> + <%= @players[m.players[2]].name %></td>
+                    <td><%= m.scores[1][0].to_s %>-<%= m.scores[1][1].to_s %></td>
+                    <td><%= @players[m.players[1]].name %> + <%= @players[m.players[3]].name %></td>
+                  </tr>
+                  <tr>
+                    <td class='text-right'><%= @players[m.players[0]].name %> + <%= @players[m.players[3]].name %></td>
+                    <td><%= m.scores[2][0].to_s %>-<%= m.scores[2][1].to_s %></td>
+                    <td><%= @players[m.players[1]].name %> + <%= @players[m.players[2]].name %></td>
+                  </tr>
+                </table>
+              ">Details</button>
+            </td>
+            <td class="text-center">
+              <button class="btn btn-default btn-xs" type="button" data-toggle="modal" data-target="#history-modal" data-division-id="<%= @division_id %>" data-match-id="<%= m.id %>"><span class="glyphicon glyphicon-sort"></span></button>
+            </td>
+            <td class="text-center"><%= m.get_duration() %></td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+  </div>
+
+  <div class="modal" id="simulator-modal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+          <h4 class="modal-title" id="simulator-title">Match predictor</h4>
+        </div>
+        <div class="modal-body container" id="simulator-content">
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="modal" id="history-modal" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-        <h4 class="modal-title" id="history-title">Classification history</h4>
-      </div>
-      <div class="modal-body container" id="history-content">
+  <div class="modal" id="history-modal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+          <h4 class="modal-title" id="history-title">Classification history</h4>
+        </div>
+        <div class="modal-body container" id="history-content">
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="modal" id="player-modal" tabindex="-1">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
-        <h4 class="modal-title" id="player-title">Player details</h4>
-      </div>
-      <div class="modal-body container" id="player-content">
+  <div class="modal" id="player-modal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+          <h4 class="modal-title" id="player-title">Player details</h4>
+        </div>
+        <div class="modal-body container" id="player-content">
+        </div>
       </div>
     </div>
   </div>

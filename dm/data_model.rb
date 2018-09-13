@@ -1,6 +1,6 @@
 require 'data_mapper'
 require 'dm-migrations'
-require 'conf'
+require './conf.rb'
 
 module DataModel
 

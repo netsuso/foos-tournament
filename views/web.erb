@@ -1,46 +1,51 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>Foosball tournament</title>
-<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="css/foos.css">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<script>var default_season_id=<%= @default_season_id %>;</script>
-</head>
-<body>
+  <head>
+    <title>Foosball tournament</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/foos.css">
+    <link rel="stylesheet" type="text/css" href="css/foos-v2.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>var default_season_id=<%= @default_season_id %>;</script>
+  </head>
+  <body>
 
-  <!-- Static navbar -->
-  <nav class="navbar navbar-default navbar-static-top">
-    <div class="container">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#">Foosball tournament</a>
-      </div>
-      <div id="navbar" class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span id="season-selected"></span><span class="caret"></span></a>
-            <ul class="dropdown-menu">
-<% @seasons.each do |s| %>
-              <li><a href="#" class="season-selector" data-season-id="<%= s.id %>"><%= s.title %></a></li>
-<% end %>
-            </ul>
-          </li>
-        </ul>
-      </div><!--/.nav-collapse -->
-    </div><!--/.container-fluid -->
-  </nav>
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default navbar-static-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" width="31" height="31" viewBox="0 0 31 31" class="Logo">
+              <path fill="#FFF" fill-rule="nonzero" d="M15.5 0C6.94 0 0 6.94 0 15.5 0 24.06 6.94 31 15.5 31 24.06 31 31 24.06 31 15.5 31 6.94 24.06 0 15.5 0zm-1.456 29a13.718 13.718 0 0 1-8.031-3.829C3.425 22.64 2 19.274 2 15.694 2 12.472 3.155 9.424 5.274 7c.054.64.189 1.327.154 1.817-.126 1.79-.306 2.909.764 4.418.417.587.52 1.43.723 2.11.198.666.991 1.015 1.538 1.425 1.103.828 2.159 1.79 3.33 2.518.771.48 1.254.72 1.028 1.642-.182.741-.233 1.198-.625 1.858-.12.202.451 1.497.641 1.683.577.564 1.148 1.081 1.776 1.588.974.787-.094 1.81-.559 2.941zm11.436-4.63A13.401 13.401 0 0 1 18.513 28c.371-.903 1.034-1.706 1.648-2.172.534-.404 1.203-1.183 1.482-1.8.279-.617.648-1.15 1.022-1.718.532-.806-1.311-2.021-1.908-2.276-1.344-.573-2.356-1.347-3.55-2.172-.851-.589-2.579.307-3.54-.105-1.315-.565-2.4-1.546-3.543-2.392C8.944 14.492 9 13.474 9 12.185c.925.034 2.24-.251 2.854.48.194.23.86 1.26 1.305.894.364-.3-.27-1.498-.392-1.78-.377-.866.858-1.204 1.49-1.791.826-.767 2.595-1.97 2.455-2.518-.14-.55-1.77-2.107-2.728-1.864-.144.037-1.408 1.339-1.652 1.543l.02-1.275c.004-.268-.51-.544-.486-.717.06-.437 1.3-1.23 1.608-1.58-.216-.132-.953-.754-1.176-.662-.54.22-1.15.373-1.69.594a3.32 3.32 0 0 0-.05-.527 13.472 13.472 0 0 1 3.41-.973l1.061.419.748.872.747.757.653.207 1.038-.961-.268-.686V2a13.41 13.41 0 0 1 5.685 2.204c-.304.027-.637.07-1.013.117-.156-.09-.355-.13-.525-.193a121.96 121.96 0 0 0 1.526 3.087c.556 1.095 1.79 2.269 2.007 3.424.256 1.362.079 2.6.218 4.202.135 1.543 1.771 3.296 1.771 3.296s.756.253 1.384.165a13.05 13.05 0 0 1-3.52 6.068z"/>
+            </svg>
+          </a>
+        </div>
 
-<div class="container" id="content"></div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul id="v2-season-selector" class="nav navbar-nav">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span id="season-selected"></span><span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <% @seasons.each do |s| %>
+                  <li><a href="#" class="season-selector" data-season-id="<%= s.id %>"><%= s.title %></a></li>
+                <% end %>
+              </ul>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div><!--/.container-fluid -->
+    </nav>
 
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/foos.js"></script>
-
-</body>
+    <div class="container" id="content"></div>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/foos.js"></script>
+    <script src="js/foos-v2.js"></script>
+  </body>
 </html>

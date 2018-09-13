@@ -1,13 +1,12 @@
 <table class="table table-super-condensed table-borderless">
-<% @classification.each do |c| %>
-<% if c[:highlight] %>
-<tr class="active">
-<% else %>
-<tr>
-<% end %>
-<td><%= @players[c[:player_id]].name %></td>
-<td><span title="<%= "#{'%.2f' % c[:points]}" %>"><%= "#{'%.0f' % c[:points]}" %></span></td>
-</tr>
-<% end %>
-
+  <% @classification.each do |c| %>
+    <% if c[:highlight] %>
+      <tr class="active">
+    <% else %>
+      <tr>
+    <% end %>
+      <td><%= @players[c[:player_id]].name %></td>
+      <td><span title="<%= "#{'%.2f' % c[:points]}" %>"><%= "#{'%.0f' % c[:points]}" %></span></td>
+    </tr>
+  <% end %>
 </table>

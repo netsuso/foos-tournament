@@ -1,66 +1,67 @@
 <div id="simulation-input" class="col-md-5">
+  <span id="simulation-data" data-match-id="<%= @match_id %>"></span>
+  <table class="table table-borderless table-condensed">
+    <tr>
+      <th class="text-right col-md-5">Player</th>
+      <th class="text-center col-md-2"># Wins</th>
+      <th class="text-left col-md-5">Set wins</th>
+    </tr>
 
-<span id="simulation-data" data-match-id="<%= @match_id %>"></span>
+    <% (0..3).each do |p| %>
+      <tr>
+        <td class="text-right"><%= @players[@match_players[p]].name %></td>
+        <td class="text-center"><span id="player-victories-<%= p %>">0</span></td>
+        <td class="text-left">
+          <button type="button" class="btn btn-default btn-xs result-direct" data-player="<%= p %>" data-result-direct="3">3</button>
+          <button type="button" class="btn btn-default btn-xs result-direct" data-player="<%= p %>" data-result-direct="0">0</button>
+        </td>
+      </tr>
+    <% end %>
+  </table>
 
-<table class="table table-borderless table-condensed">
-<tr>
-<th class="text-right col-md-5">Player</th>
-<th class="text-center col-md-2"># Wins</th>
-<th class="text-left col-md-5">Set wins</th>
-</tr>
-<% (0..3).each do |p| %>
-<tr>
-<td class="text-right"><%= @players[@match_players[p]].name %></td>
-<td class="text-center"><span id="player-victories-<%= p %>">0</span></td>
-<td class="text-left">
-<button type="button" class="btn btn-default btn-xs result-direct" data-player="<%= p %>" data-result-direct="3">3</button>
-<button type="button" class="btn btn-default btn-xs result-direct" data-player="<%= p %>" data-result-direct="0">0</button>
-</td>
-</tr>
-<% end %>
-</table>
+  <table class="table table-borderless">
+    <tr>
+      <th colspan="3" class="text-center">Submatches</th>
+    </tr>
 
-<table class="table table-borderless">
-<tr><th colspan="3" class="text-center">Submatches</th></tr>
-<% @submatches.each do |sm| %>
-<tr>
-<td class="text-right"><%= sm[:player1a] %> + <%= sm[:player1b] %></td>
-<td class="text-center">
-<div class="btn-group">
-  <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" id="dropdown-<%= sm[:idx] %>">
-    <span id="result-selected-<%= sm[:idx] %>" data-result-a="0" data-result-b="0" data-valid="0">Result</span> <span class="caret"></span>
-  </button>
-  <ul class="dropdown-menu">
-<% @results1.each do |r| %>
-    <li><a href="#" class="result-selector" data-submatch="<%= sm[:idx] %>" data-result-a="<%= r[0] %>" data-result-b="<%= r[1] %>"><%= r[0] %>-<%= r[1] %></a></li>
-<% end %>
-    <li role="separator" class="divider"></li>
-<% @results2.each do |r| %>
-    <li><a href="#" class="result-selector" data-submatch="<%= sm[:idx] %>" data-result-a="<%= r[0] %>" data-result-b="<%= r[1] %>"><%= r[0] %>-<%= r[1] %></a></li>
-<% end %>
-  </ul>
-</div>
-</td>
-<td class="text-left"><%= sm[:player2a] %> + <%= sm[:player2b] %></td>
-</tr>
-<% end %>
-</table>
+    <% @submatches.each do |sm| %>
+      <tr>
+        <td class="text-right"><%= sm[:player1a] %> + <%= sm[:player1b] %></td>
+        <td class="text-center">
+          <div class="btn-group">
+            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" id="dropdown-<%= sm[:idx] %>">
+              <span id="result-selected-<%= sm[:idx] %>" data-result-a="0" data-result-b="0" data-valid="0">Result</span> <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <% @results1.each do |r| %>
+                <li><a href="#" class="result-selector" data-submatch="<%= sm[:idx] %>" data-result-a="<%= r[0] %>" data-result-b="<%= r[1] %>"><%= r[0] %>-<%= r[1] %></a></li>
+              <% end %>
+              <li role="separator" class="divider"></li>
+              <% @results2.each do |r| %>
+                <li><a href="#" class="result-selector" data-submatch="<%= sm[:idx] %>" data-result-a="<%= r[0] %>" data-result-b="<%= r[1] %>"><%= r[0] %>-<%= r[1] %></a></li>
+              <% end %>
+            </ul>
+          </div>
+        </td>
+        <td class="text-left"><%= sm[:player2a] %> + <%= sm[:player2b] %></td>
+      </tr>
+    <% end %>
+  </table>
 </div>
 
 <div id="simulation-classification-old" class="col-md-2">
-<table class="table table-super-condensed table-borderless">
-<% @classification.each do |c| %>
-<% if c[:highlight] %>
-<tr class="active">
-<% else %>
-<tr>
-<% end %>
-<td><%= @players[c[:player_id]].name %></td>
-<td><span title="<%= "#{'%.2f' % c[:points]}" %>"><%= "#{'%.0f' % c[:points]}" %></span></td>
-</tr>
-<% end %>
-</table>
+  <table class="table table-super-condensed table-borderless">
+    <% @classification.each do |c| %>
+      <% if c[:highlight] %>
+        <tr class="active">
+      <% else %>
+        <tr>
+      <% end %>
+        <td><%= @players[c[:player_id]].name %></td>
+        <td><span title="<%= "#{'%.2f' % c[:points]}" %>"><%= "#{'%.0f' % c[:points]}" %></span></td>
+      </tr>
+    <% end %>
+  </table>
 </div>
 
-<div id="simulation-classification-new" class="col-md-2">
-</div>
+<div id="simulation-classification-new" class="col-md-2"></div>

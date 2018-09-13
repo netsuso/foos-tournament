@@ -224,7 +224,7 @@ post '/ajax/simulation/:match' do
   erb :simulation
 end
 
-get %r{/api/v1/players/?$} do
+get %r{/api/v1/players/?} do
   player_repo = PlayerRepository.new()
   response = {}
   player_repo.get_all_players().each do |p|
@@ -233,13 +233,13 @@ get %r{/api/v1/players/?$} do
   json_api(response)
 end
 
-get %r{/api/v1/players/(?<player_id>\d+)/?$} do
+get %r{/api/v1/players/(?<player_id>\d+)/?} do
   player_repo = PlayerRepository.new()
   p = player_repo.get(params[:player_id])
   json_api(player2api(p))
 end
 
-get %r{/api/v1/seasons/?$} do
+get %r{/api/v1/seasons/?} do
   season_repo = SeasonRepository.new()
   response = []
   season_repo.get_all_seasons().each do |s|
@@ -248,25 +248,25 @@ get %r{/api/v1/seasons/?$} do
   json_api(response)
 end
 
-get %r{/api/v1/seasons/current/?$} do
+get %r{/api/v1/seasons/current/?} do
   season_repo = SeasonRepository.new()
   s = season_repo.get_most_recent_season()
   json_api(season2api(s))
 end
 
-get %r{/api/v1/seasons/(?<season_id>\d+)/?$} do
+get %r{/api/v1/seasons/(?<season_id>\d+)/?} do
   season_repo = SeasonRepository.new()
   s = season_repo.get(params[:season_id].to_i)
   json_api(season2api(s))
 end
 
-get %r{/api/v1/divisions/(?<division_id>\d+)/?$} do
+get %r{/api/v1/divisions/(?<division_id>\d+)/?} do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
   json_api(division2api(d))
 end
 
-get %r{/api/v1/divisions/(?<division_id>\d+)/players/?$} do
+get %r{/api/v1/divisions/(?<division_id>\d+)/players/?} do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
   response = {}
@@ -276,7 +276,7 @@ get %r{/api/v1/divisions/(?<division_id>\d+)/players/?$} do
   json_api(response)
 end
 
-get %r{/api/v1/divisions/(?<division_id>\d+)/players/(?<player_id>\d+)/?$} do
+get %r{/api/v1/divisions/(?<division_id>\d+)/players/(?<player_id>\d+)/?} do
   response = {}
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
@@ -295,7 +295,7 @@ get %r{/api/v1/divisions/(?<division_id>\d+)/players/(?<player_id>\d+)/?$} do
   json_api(response)
 end
 
-get %r{/api/v1/divisions/(?<division_id>\d+)/matches/?$} do
+get %r{/api/v1/divisions/(?<division_id>\d+)/matches/?} do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
   response = []
@@ -307,7 +307,7 @@ get %r{/api/v1/divisions/(?<division_id>\d+)/matches/?$} do
   json_api(response)
 end
 
-get %r{/api/v1/divisions/(?<division_id>\d+)/matches/open/?$} do
+get %r{/api/v1/divisions/(?<division_id>\d+)/matches/open/?} do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
 
@@ -320,7 +320,7 @@ get %r{/api/v1/divisions/(?<division_id>\d+)/matches/open/?$} do
   json_api(response)
 end
 
-get %r{/api/v1/divisions/(?<division_id>\d+)/matches/played/?$} do
+get %r{/api/v1/divisions/(?<division_id>\d+)/matches/played/?} do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
 
@@ -333,7 +333,7 @@ get %r{/api/v1/divisions/(?<division_id>\d+)/matches/played/?$} do
   json_api(response)
 end
 
-get %r{/api/v1/divisions/(?<division_id>\d+)/classification/?$} do
+get %r{/api/v1/divisions/(?<division_id>\d+)/classification/?} do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
   response = d.get_current_classification()
@@ -341,7 +341,7 @@ get %r{/api/v1/divisions/(?<division_id>\d+)/classification/?$} do
   json_api(response)
 end
 
-get %r{/api/v1/matches/(?<match_id>\d+)/?$} do
+get %r{/api/v1/matches/(?<match_id>\d+)/?} do
   match_repo = MatchRepository.new()
   match = match_repo.get(params[:match_id].to_i)
   if match.played?
