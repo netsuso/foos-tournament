@@ -337,7 +337,12 @@ aside.active {
   width: 100%;
 }
 
+/* Only mobile (tablet vertical) */
 @media screen and (max-width: 1023px) {
+  .container > .navbar-header > .navbar-toggle {
+    margin-right: 47px;
+  }
+
   .SummaryTables {
     left: initial;
     bottom: initial;
@@ -351,6 +356,7 @@ aside.active {
   }
 }
 
+/* Only desktop (tablet horizontal) */
 @media screen and (min-width: 1024px) {
   .navbar-brand {
     padding: 46px 30px;
