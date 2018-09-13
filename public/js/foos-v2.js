@@ -3,6 +3,8 @@ function log() {
 }
 
 function sortByVictoriesAndPlayers(a, b) {
+  if (a.maxFollowingVictories < b.maxFollowingVictories) return 1;
+  if (a.maxFollowingVictories > b.maxFollowingVictories) return -1;
   if (a.followingVictories < b.followingVictories) return 1;
   if (a.followingVictories > b.followingVictories) return -1;
   if (a.player > b.player) return 1;
@@ -164,7 +166,8 @@ function calculateWinners(divisions) {
           followingPlayerVictories.push({
             player: Number(player.player),
             division: player.division,
-            followingVictories: 0
+            followingVictories: 0,
+            maxFollowingVictories: 0
           });
 
           playerIndex = followingPlayerVictories.length - 1;
@@ -174,6 +177,14 @@ function calculateWinners(divisions) {
           followingPlayerVictories[playerIndex].followingVictories++;
         } else {
           followingPlayerVictories[playerIndex].followingVictories = 0;
+        }
+
+        if (
+          followingPlayerVictories[playerIndex].followingVictories >
+          followingPlayerVictories[playerIndex].maxFollowingVictories
+        ) {
+          followingPlayerVictories[playerIndex].maxFollowingVictories =
+            followingPlayerVictories[playerIndex].followingVictories;
         }
       }
     }
@@ -282,7 +293,7 @@ function populateTopWinners() {
 
         var counter = document.createElement("span");
         counter.className = "Ranking-counter";
-        counter.innerText = position.followingVictories + " invictus";
+        counter.innerText = position.maxFollowingVictories + " invictus";
         element.appendChild(counter);
 
         list.appendChild(element);
