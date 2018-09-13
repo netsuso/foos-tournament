@@ -40,6 +40,44 @@
   </div>
 </div>
 
+<aside class="Recents">
+  <div class="Recents-toggler">
+    <button onClick="javascript:toggleSidebar()">Partidos recientes</button>
+  </div>
+
+  <div class="Recents-content">
+    <% @recent_matches.each do |m| %>
+      <div class="Recents-match Match">
+        <div class="Match-content">
+          <div class="Match-header">
+            <span class="Match-division">
+              <img
+                src=""
+                title="<%= @division_data[m.division_id][:name] %>"
+                alt="<%= @division_data[m.division_id][:name] %> logo"
+              />
+            </span>
+            <span class="Match-duration"><i class="glyphicon glyphicon-time"></i> <%= m.get_duration() %></span>
+          </div>
+          <div class="body">
+            <table>
+              <% m.players.each_with_index do |player_id, index| %>
+                <tr>
+                  <td><%= @players[player_id].name %></td>
+                  <td><%= m.victories[index] %></td>
+                </tr>
+              <% end %>
+            </table>
+          </div>
+        </div>
+        <div class="Match-cta">
+          <button><i class="glyphicon glyphicon-record"></i> Watch</button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</aside>
+
 <!--
 <div class="col-md-12">
   <h4>Recently finished matches</h4>

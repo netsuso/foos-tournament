@@ -58,6 +58,10 @@ function handleGetDivisions(res) {
   }, 500);
 }
 
+function toggleSidebar() {
+  $(".Recents").toggleClass("active");
+}
+
 var summary = {
   activeDivision: undefined,
   selectDivision: function(divisionId) {
