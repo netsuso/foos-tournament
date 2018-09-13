@@ -25,6 +25,7 @@ function select_season() {
 }
 
 function load_season_section(season_id, initial_subsection = 0) {
+  window.sessionId = season_id;
   $("#content").load("ajax/season/" + season_id, function() {
     on_load_season_section(initial_subsection);
   });
@@ -34,6 +35,8 @@ function load_season_section(season_id, initial_subsection = 0) {
 }
 
 function on_load_season_section(initial_subsection = 0) {
+  console.log("Loading season section", initial_subsection);
+  v2startup();
   $(".tab-summary").click(activate_tab_summary);
   $(".tab-division").click(activate_tab_division);
   $("#tab-link-" + initial_subsection).trigger("click");

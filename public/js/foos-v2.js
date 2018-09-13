@@ -10,8 +10,32 @@ function sortByVictoriesAndPlayers(a, b) {
   return 0;
 }
 
-function startup() {
-  getDivisions();
+function v2startup() {
+  getDivisions(window.sessionId || default_season_id);
+}
+
+function getDivisions(seasonId) {
+  $.get("/api/v1/seasons/" + seasonId + "/", handleGetDivisions);
+}
+
+function handleGetDivisions(res) {
+  const response = JSON.parse(res);
+  const activeDivisionByDefault = response.divisions[0].id;
+  summary.divisions = response.divisions;
+
+  populateTopWinners();
+
+  // Add elements to menu
+  $("#v2-season-selector .tab-division").remove();
+
+  for (var index in response.divisions.reverse()) {
+    $("#v2-season-selector").prepend(createDivisionSelector(response.divisions[index]));
+  }
+
+  // Set first element as active
+  setTimeout(() => {
+    summary.selectDivision(activeDivisionByDefault);
+  }, 500);
 }
 
 function createDivisionSelector(division) {
@@ -42,31 +66,6 @@ function createDivisionSelector(division) {
   };
 
   return element;
-}
-
-function getDivisions(seasonId) {
-  var season = seasonId || default_season_id;
-  $.get("/api/v1/seasons/" + season + "/", handleGetDivisions);
-}
-
-function handleGetDivisions(res) {
-  const response = JSON.parse(res);
-  const activeDivisionByDefault = summary.activeDivision || response.divisions[0].id;
-  summary.divisions = response.divisions;
-
-  populateTopWinners();
-
-  // Add elements to menu
-  for (var index in response.divisions.reverse()) {
-    $("#v2-season-selector").prepend(createDivisionSelector(response.divisions[index]));
-  }
-
-  // Set first element as active
-  setTimeout(() => {
-    if (activeDivisionByDefault !== summary.activeDivision) {
-      summary.selectDivision(activeDivisionByDefault);
-    }
-  }, 500);
 }
 
 function toggleSidebar() {
@@ -307,4 +306,4 @@ var summary = {
   }
 };
 
-$(document).ready(startup);
+$(document).ready(v2startup);
