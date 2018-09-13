@@ -288,6 +288,7 @@ function populateTopWinners() {
         list.appendChild(element);
       });
 
+      $(".Widget .Ranking ul").remove();
       $(".Widget .Ranking").append(list);
     });
   });

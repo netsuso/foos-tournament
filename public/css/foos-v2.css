@@ -394,7 +394,7 @@ aside.active {
   background-color: #efefef;
   bottom: 0;
   display: inline-block;
-  height: calc(100vh - 112px);
+  max-height: calc(100vh - 112px);
   left: 48%;
   overflow: hidden;
   overflow-y: auto;
@@ -652,6 +652,7 @@ aside.active {
     left: initial;
     bottom: initial;
     height: auto;
+    max-height: none;
     position: relative;
     width: 100%;
   }
