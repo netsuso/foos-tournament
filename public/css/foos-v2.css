@@ -19,11 +19,11 @@
 }
 
 .Weight-light {
-  font-family: Montserrat-light;
+  font-family: Montserrat-light !important;
 }
 
 .Weight-bold {
-  font-family: Montserrat-bold;
+  font-family: Montserrat-bold !important;
 }
 
 /* Generics */
@@ -38,14 +38,8 @@ body {
   padding: 0;
 }
 
-table tr > td,
-table tr > th {
-  padding: 16px;
-  font-size: 16px;
-}
-
-table tr > th {
-  font-weight: bold;
+#content.container {
+  margin-top: 132px;
 }
 
 .Heading {
@@ -55,8 +49,16 @@ table tr > th {
 }
 
 /* Navigation */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
 .navbar-default {
-  background-color: black;
+  background-color: transparent;
+  background-image: linear-gradient(to top, rgba(20, 20, 20, 0), #111111);
   border: none;
 }
 
@@ -114,6 +116,54 @@ table tr > th {
 }
 
 /* COMPONENTS */
+/* Spacer */
+.Spacer {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin-bottom: 39px;
+}
+
+/* Table */
+.Table {
+  background-color: white;
+  color: black;
+  width: 100%;
+}
+
+.Table * {
+  color: black;
+  border: none;
+  border-color: transparent;
+}
+
+.Table tr.active {
+  background-color: #efefef;
+}
+
+.Table tr > td,
+.Table tr > th {
+  font-size: 16px;
+  padding: 16px;
+  min-width: 64px;
+  vertical-align: top;
+}
+
+.Table tr > th {
+  font-family: Montserrat-bold;
+}
+
+.Table tr > td {
+  font-family: Montserrat-light;
+}
+
+.Table.Table--condensed tr > td,
+.Table.Table--condensed tr > th {
+  font-size: 14px;
+  padding: 4px 8px;
+  min-width: 0;
+}
 
 /* Aside */
 aside {
@@ -252,17 +302,8 @@ aside.active {
 }
 
 .SummaryTables-division {
-  background-color: white;
-  color: black;
   display: none;
-  padding: 14px 10px;
   width: calc(100% - 72px);
-}
-
-.SummaryTables-division * {
-  color: black;
-  border: none;
-  border-color: transparent;
 }
 
 .SummaryTables-division.active {
@@ -270,7 +311,9 @@ aside.active {
 }
 
 .SummaryTables-division tr td:nth-child(1) .before,
-.SummaryTables-division tr td:nth-child(1) .before {
+.SummaryTables-division tr td:nth-child(1) .before,
+.Division-table tr td:nth-child(1) .before,
+.Division-table tr td:nth-child(1) .before {
   float: left;
   height: 22px;
   position: relative;
@@ -279,14 +322,18 @@ aside.active {
 }
 
 .SummaryTables-division tr:nth-child(2) td:nth-child(1) .before,
-.SummaryTables-division tr:nth-child(3) td:nth-child(1) .before {
+.SummaryTables-division tr:nth-child(3) td:nth-child(1) .before,
+.Division-table tr:nth-child(2) td:nth-child(1) .before,
+.Division-table tr:nth-child(3) td:nth-child(1) .before {
   background-color: lightgreen;
 }
 
 .SummaryTables-division tr:nth-last-child(2) td:nth-child(1) .before,
 .SummaryTables-division tr:nth-last-child(1) td:nth-child(1) .before,
 .SummaryTables-division[data-name="Division 2"] tr:nth-last-child(4) td:nth-child(1) .before,
-.SummaryTables-division[data-name="Division 2"] tr:nth-last-child(3) td:nth-child(1) .before {
+.SummaryTables-division[data-name="Division 2"] tr:nth-last-child(3) td:nth-child(1) .before,
+.Division-table tr:nth-last-child(2) td:nth-child(1) .before,
+.Division-table tr:nth-last-child(1) td:nth-child(1) .before {
   background-color: lightcoral;
 }
 
@@ -298,6 +345,12 @@ aside.active {
 .SummaryTables-division[data-name="Division 3B"] tr:nth-last-child(2) td:nth-child(1) .before,
 .SummaryTables-division[data-name="Division 3B"] tr:nth-last-child(1) td:nth-child(1) .before {
   display: none;
+}
+
+/* Division */
+.Division-tableWrapper {
+  background-color: white;
+  padding: 24px;
 }
 
 /* Recents */
@@ -380,12 +433,11 @@ aside.active {
 .Widget-slideDots,
 .Widget-buttons {
   display: inline-block;
-  float: left;
   min-height: 36px;
 }
 
 .Widget-slideDots {
-  width: calc(100% - 76px);
+  width: calc(100% - 80px);
 }
 
 .Widget-slideDot {
@@ -436,6 +488,12 @@ aside.active {
   }
 
   .SummaryTables-division {
+    overflow-x: auto;
+  }
+
+  .Division-tableWrapper {
+    padding: 0;
+    overflow: hidden;
     overflow-x: auto;
   }
 }

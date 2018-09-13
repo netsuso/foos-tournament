@@ -20,7 +20,7 @@
 
     <% @division_data.each do |id, data| %>
       <div class="SummaryTables-division" data-id="<%= id %>" data-name="<%= data[:name] %>">
-        <table width="100%">
+        <table class="Table" width="100%">
           <tr>
             <th class="col-md-1 text-right">Pos</th>
             <th class="col-md-4 text-left">Player</th>
@@ -29,7 +29,9 @@
 
           <% data[:classification].each do |c| %>
             <tr>
-              <td class="text-right Color-lightgrey Weight-light"><span class="before"></span><%= c[:position] %></td>
+              <td class="text-right Color-lightgrey Weight-light">
+                <span class="before"></span> <%= c[:position] %>
+              </td>
               <td class="text-left Weight-light"><%= @players[c[:player_id]].name %></td>
               <td class="text-right Weight-bold"><span title="<%= "#{'%.2f' % c[:points]}" %>"><%= "#{'%.0f' % c[:points]}" %></span></td>
             </tr>

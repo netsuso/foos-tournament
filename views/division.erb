@@ -1,64 +1,146 @@
+<div class="row">
+  <!-- Title and widget -->
+  <div class="col-md-4">
+    <h1 class="Heading">Division</h1>
 
-<div class="col-md-4">
-  <h1 class="Heading">Division</h1>
+    <div class="Widget">
+      <div class="Widget-title">
+        <h2><span>Partidos</span> <span>pendientes</span></h2>
+      </div>
 
-  <div class="Widget">
-    <div class="Widget-title">
-      <h2><span>Partidos</span> <span>pendientes</span></h2>
-    </div>
-
-    <div class="Widget-content">
-        <% @open_matches.each_with_index do |m, index| %>
-          <% if index === 0 %>
-            <div class="Widget-match Match active">
-          <% else %>
-            <div class="Widget-match Match">
-          <% end %>
-            <div class="Match-content">
-              <div class="Match-body">
-                <table>
-                  <% m.players.each_with_index do |player_id, index| %>
-                    <tr>
-                      <td><%= @players[player_id].name %></td>
-                      <td>-</td>
-                    </tr>
-                  <% end %>
-                </table>
+      <div class="Widget-content">
+          <% @open_matches.each_with_index do |m, index| %>
+            <% if index === 0 %>
+              <div class="Widget-match Match active">
+            <% else %>
+              <div class="Widget-match Match">
+            <% end %>
+              <div class="Match-content">
+                <div class="Match-body">
+                  <table>
+                    <% m.players.each_with_index do |player_id, index| %>
+                      <tr>
+                        <td><%= @players[player_id].name %></td>
+                        <td>-</td>
+                      </tr>
+                    <% end %>
+                  </table>
+                </div>
+              </div>
+              <div class="Match-cta">
+                <button
+                  type="button"
+                  data-toggle="modal"
+                  data-target="#simulator-modal"
+                  data-match-id="<%= m.id %>"
+                >Predict</button>
               </div>
             </div>
-            <div class="Match-cta">
-              <button
-                type="button"
-                data-toggle="modal"
-                data-target="#simulator-modal"
-                data-match-id="<%= m.id %>"
-              >Predict</button>
-            </div>
-          </div>
-        <% end %>
-    </div>
-
-    <div class="Widget-pagination">
-      <div class="Widget-slideDots">
-        <% @open_matches.each_with_index do |m, index| %>
-          <% if index === 0 %>
-            <button onClick="javascript:selectWidgetItem(undefined, <%= index %>)" class="Widget-slideDot active"></button>
-          <% else %>
-            <button onClick="javascript:selectWidgetItem(undefined, <%= index %>)" class="Widget-slideDot"></button>
           <% end %>
-        <% end %>
       </div>
 
-      <div class="Widget-buttons">
-        <button class="Widget-button" onClick="javascript:showPrevWidgetItem()"><i class="glyphicon glyphicon-menu-left"></i></button>
-        <button class="Widget-button" onClick="javascript:showNextWidgetItem()"><i class="glyphicon glyphicon-menu-right"></i></button>
+      <div class="Widget-pagination">
+        <div class="Widget-slideDots">
+          <% @open_matches.each_with_index do |m, index| %>
+            <% if index === 0 %>
+              <button onClick="javascript:selectWidgetItem(undefined, <%= index %>)" class="Widget-slideDot active"></button>
+            <% else %>
+              <button onClick="javascript:selectWidgetItem(undefined, <%= index %>)" class="Widget-slideDot"></button>
+            <% end %>
+          <% end %>
+        </div>
+
+        <div class="Widget-buttons">
+          <button class="Widget-button" onClick="javascript:showPrevWidgetItem()"><i class="glyphicon glyphicon-menu-left"></i></button>
+          <button class="Widget-button" onClick="javascript:showNextWidgetItem()"><i class="glyphicon glyphicon-menu-right"></i></button>
+        </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Ranking -->
+  <div class="col-md-7">
+    <div class="Division-tableWrapper">
+      <table class="Table Division-table">
+        <tr>
+          <th class="col-md-1 text-right"></th>
+          <th class="col-md-4 text-left"></th>
+          <th class="col-md-2 text-right">Matches</th>
+          <th class="col-md-2 text-right">Rivals</th>
+          <th class="col-md-2 text-right">Points</th>
+        </tr>
+
+        <% @classification.each do |c| %>
+          <tr>
+            <!-- Position -->
+            <td class="text-right">
+              <span class="before"></span> <%= c[:position] %>
+            </td>
+
+            <!-- Name -->
+            <td class="text-left">
+              <a href="#" class="player-details" data-toggle="modal" data-target="#player-modal" data-division-id="<%= @division_id %>" data-player-id="<%= c[:player_id] %>"><%= @players[c[:player_id]].name %></a>
+            </td>
+
+            <!-- Matches -->
+            <td class="text-right"><%= c[:num_matches] %><% if @total_matches[c[:player_id]] %> / <%= @total_matches[c[:player_id]] %><% end %></td>
+
+            <!-- Rivals -->
+            <td class="text-right"><%= c[:num_rivals] %></td>
+
+            <!-- Points -->
+            <td class="text-right Weight-bold" title="<%= "#{'%.2f' % c[:points]}" %>">
+              <%= "#{'%.0f' % c[:points]}" %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    </div>
+  </div>
+
+  <div class="col-md-1"></div>
+</div>
+
+<div class="Spacer"></div>
+
+<div class="row">
+  <!-- History -->
+  <div class="col-md-11">
+    <div class="Division-tableWrapper">
+      <table class="Table">
+        <tr>
+          <th class="text-right">Time</th>
+          <th>Player 1</th>
+          <th></th>
+          <th>Player 2</th>
+          <th></th>
+          <th>Player 3</th>
+          <th></th>
+          <th>Player 4</th>
+          <th></th>
+          <th></th>
+        </tr>
+
+        <% @finished_matches.each do |m| %>
+          <tr>
+            <td><%= m.get_time() %></td>
+            <td><%= @players[m.players[0]].name %></td>
+            <td><%= m.victories[0] %></td>
+            <td><%= @players[m.players[1]].name %></td>
+            <td><%= m.victories[1] %></td>
+            <td><%= @players[m.players[2]].name %></td>
+            <td><%= m.victories[2] %></td>
+            <td><%= @players[m.players[3]].name %></td>
+            <td><%= m.victories[3] %></td>
+            <td class="text-center"><%= m.get_duration() %></td>
+          </tr>
+        <% end %>
+      </table>
     </div>
   </div>
 </div>
 
-<div class="col-md-6"></div>
-
+<!-- Aside -->
 <aside class="Recents">
   <div class="Recents-toggler">
     <button onClick="javascript:toggleSidebar()">Partidos recientes</button>
@@ -96,6 +178,45 @@
     <% end %>
   </div>
 </aside>
+
+<div class="modal" id="simulator-modal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+        <h4 class="modal-title" id="simulator-title">Match predictor</h4>
+      </div>
+      <div class="modal-body container" id="simulator-content">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="history-modal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+        <h4 class="modal-title" id="history-title">Classification history</h4>
+      </div>
+      <div class="modal-body container" id="history-content">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="player-modal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+        <h4 class="modal-title" id="player-title">Player details</h4>
+      </div>
+      <div class="modal-body container" id="player-content">
+      </div>
+    </div>
+  </div>
+</div>
 
 <!--
 <div class="col-md-12">
