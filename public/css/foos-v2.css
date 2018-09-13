@@ -1,6 +1,6 @@
 @font-face {
   font-family: Montserrat-light;
-  src: url(../fonts/Montserrat-Regular.ttf);
+  src: url(../fonts/Montserrat-Light.ttf);
 }
 
 @font-face {
@@ -29,8 +29,6 @@
 /* Generics */
 * {
   font-family: Montserrat;
-  font-size: 14px;
-  color: white;
   box-sizing: border-box;
 }
 
@@ -51,6 +49,7 @@ table tr > th {
 }
 
 .Heading {
+  color: white;
   font-family: Montserrat-bold;
   font-size: 56px;
 }
@@ -135,6 +134,7 @@ aside.active {
 
 /* Match card */
 .Match {
+  color: white;
   position: relative;
   display: inline-block;
   border: 3px solid transparent;
@@ -145,14 +145,14 @@ aside.active {
 .Match-content {
   background-color: #141313;
   border-radius: 4px;
-  padding: 0 24px;
-  padding-bottom: 8px;
+  padding: 8px 24px;
 }
 
 .Match-header {
   display: block;
   height: 78px;
   padding: 24px 0;
+  padding-bottom: 16px;
   width: 100%;
 }
 
@@ -194,6 +194,9 @@ aside.active {
   background: transparent;
   border: none;
   height: 42px;
+  letter-spacing: 4px;
+  font-family: Montserrat-bold;
+  font-size: 16px;
   text-transform: uppercase;
   width: 100%;
 }
@@ -216,11 +219,12 @@ aside.active {
   bottom: 0;
   display: inline-block;
   height: calc(100vh - 112px);
-  left: 50%;
+  left: 48%;
   overflow: hidden;
   overflow-y: auto;
   position: fixed;
-  width: 408px;
+  max-width: 408px;
+  min-width: 26%;
 }
 
 .SummaryTables-selector,
@@ -287,6 +291,8 @@ aside.active {
 }
 
 .SummaryTables-division[data-name="Division 1"] tr:nth-child(3) td:nth-child(1) .before,
+.SummaryTables-division[data-name="Division 3"] tr:nth-last-child(2) td:nth-child(1) .before,
+.SummaryTables-division[data-name="Division 3"] tr:nth-last-child(1) td:nth-child(1) .before,
 .SummaryTables-division[data-name="Division 3A"] tr:nth-last-child(2) td:nth-child(1) .before,
 .SummaryTables-division[data-name="Division 3A"] tr:nth-last-child(1) td:nth-child(1) .before,
 .SummaryTables-division[data-name="Division 3B"] tr:nth-last-child(2) td:nth-child(1) .before,
@@ -301,6 +307,7 @@ aside.active {
 }
 
 .Recents-toggler {
+  color: white;
   height: 100%;
   margin: 0;
   padding: 0;
@@ -335,6 +342,83 @@ aside.active {
 
 .Recents-match {
   width: 100%;
+}
+
+/* Widget */
+.Widget {
+  margin-top: 120px;
+}
+
+.Widget-title h2,
+.Widget-title h2 span {
+  font-family: Montserrat-bold;
+  font-size: 56px;
+  color: white;
+}
+
+.Widget-title h2 span:nth-child(1) {
+  opacity: 0.15;
+}
+
+.Widget-title h2 span:nth-child(2) {
+  opacity: 0.1;
+}
+
+.Widget-title h2 span:nth-child(3) {
+  opacity: 0.05;
+}
+
+.Widget-match {
+  display: none;
+  width: 100%;
+}
+
+.Widget-match.active {
+  display: block;
+}
+
+.Widget-slideDots,
+.Widget-buttons {
+  display: inline-block;
+  float: left;
+  min-height: 36px;
+}
+
+.Widget-slideDots {
+  width: calc(100% - 76px);
+}
+
+.Widget-slideDot {
+  background-color: #232323;
+  border-radius: 50%;
+  border: none;
+  display: inline-block;
+  height: 6px;
+  margin: 0;
+  padding: 0;
+  margin-top: 12px;
+  width: 6px;
+  position: relative;
+  appearance: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}
+
+.Widget-slideDot.active {
+  background-color: white;
+}
+
+.Widget-buttons {
+  color: white;
+  text-align: right;
+  width: 76px;
+}
+
+.Widget-button {
+  background-color: transparent;
+  border: none;
+  border-radius: 4px;
+  font-size: 24px;
 }
 
 /* Only mobile (tablet vertical) */

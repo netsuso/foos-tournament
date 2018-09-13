@@ -49,7 +49,7 @@ function activate_tab_summary() {
 }
 
 function activate_tab_division() {
-  division_id = $(this).data("division-id");
+  division__id = $(this).data("division-id");
   load_division_subsection(division_id);
   $(".tab-element").removeClass("active");
   $("#tab-division-" + division_id).addClass("active");

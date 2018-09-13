@@ -1,3 +1,103 @@
+
+<div class="col-md-4">
+  <h1 class="Heading">Division</h1>
+
+  <div class="Widget">
+    <div class="Widget-title">
+      <h2><span>Partidos</span> <span>pendientes</span></h2>
+    </div>
+
+    <div class="Widget-content">
+        <% @open_matches.each_with_index do |m, index| %>
+          <% if index === 0 %>
+            <div class="Widget-match Match active">
+          <% else %>
+            <div class="Widget-match Match">
+          <% end %>
+            <div class="Match-content">
+              <div class="Match-body">
+                <table>
+                  <% m.players.each_with_index do |player_id, index| %>
+                    <tr>
+                      <td><%= @players[player_id].name %></td>
+                      <td>-</td>
+                    </tr>
+                  <% end %>
+                </table>
+              </div>
+            </div>
+            <div class="Match-cta">
+              <button
+                type="button"
+                data-toggle="modal"
+                data-target="#simulator-modal"
+                data-match-id="<%= m.id %>"
+              >Predict</button>
+            </div>
+          </div>
+        <% end %>
+    </div>
+
+    <div class="Widget-pagination">
+      <div class="Widget-slideDots">
+        <% @open_matches.each_with_index do |m, index| %>
+          <% if index === 0 %>
+            <button onClick="javascript:selectWidgetItem(undefined, <%= index %>)" class="Widget-slideDot active"></button>
+          <% else %>
+            <button onClick="javascript:selectWidgetItem(undefined, <%= index %>)" class="Widget-slideDot"></button>
+          <% end %>
+        <% end %>
+      </div>
+
+      <div class="Widget-buttons">
+        <button class="Widget-button" onClick="javascript:showPrevWidgetItem()"><i class="glyphicon glyphicon-menu-left"></i></button>
+        <button class="Widget-button" onClick="javascript:showNextWidgetItem()"><i class="glyphicon glyphicon-menu-right"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-6"></div>
+
+<aside class="Recents">
+  <div class="Recents-toggler">
+    <button onClick="javascript:toggleSidebar()">Partidos recientes</button>
+  </div>
+
+  <div class="Recents-content">
+    <% @finished_matches.each do |m| %>
+      <div class="Recents-match Match">
+        <div class="Match-content">
+          <div class="Match-header">
+            <span class="Match-division">
+              <img
+                src=""
+                title="<%= @division_id %>"
+                alt="<%= @division_id %> logo"
+              />
+            </span>
+            <span class="Match-duration"><i class="glyphicon glyphicon-time"></i> <%= m.get_duration() %></span>
+          </div>
+          <div class="Match-body">
+            <table>
+              <% m.players.each_with_index do |player_id, index| %>
+                <tr>
+                  <td><%= @players[player_id].name %></td>
+                  <td><%= m.victories[index] %></td>
+                </tr>
+              <% end %>
+            </table>
+          </div>
+        </div>
+        <div class="Match-cta">
+          <button><i class="glyphicon glyphicon-record"></i> Watch</button>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</aside>
+
+<!--
 <div class="col-md-12">
   <div class="tab2-content tab2-content-classification">
     <div class="col-md-6">
@@ -178,3 +278,4 @@
     </div>
   </div>
 </div>
+-->

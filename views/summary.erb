@@ -1,4 +1,4 @@
-<div class="col-md-6">
+<div class="col-md-4">
   <h1 class="Heading">Summary</h1>
 
   <!-- TODO: Racha de victorias
@@ -10,7 +10,7 @@
   -->
 </div>
 
-<div class="col-md-6">
+<div class="col-md-5 col-md-offset-1">
   <div class="SummaryTables">
     <div class="SummaryTables-selector">
       <% @division_data.each do |id, data| %>
@@ -59,7 +59,7 @@
             </span>
             <span class="Match-duration"><i class="glyphicon glyphicon-time"></i> <%= m.get_duration() %></span>
           </div>
-          <div class="body">
+          <div class="Match-body">
             <table>
               <% m.players.each_with_index do |player_id, index| %>
                 <tr>
