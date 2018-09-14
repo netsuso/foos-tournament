@@ -17,7 +17,9 @@
   <div class="SummaryTables">
     <div class="SummaryTables-selector">
       <% @division_data.each do |id, data| %>
-        <button onClick="javascript:summary.selectDivision(<%= id %>)" class="SummaryTables-divisionSelector" data-id="<%= id %>"><%= data[:name] %></button>
+        <button onClick="javascript:selectDivision(<%= id %>)" class="SummaryTables-divisionSelector" data-id="<%= id %>">
+          <span class="DivisionLogo DivisionLogo--xl"><%= data[:logo] %></span>
+        </button>
       <% end %>
     </div>
 
@@ -57,11 +59,7 @@
         <div class="Match-content">
           <div class="Match-header">
             <span class="Match-division">
-              <img
-                src=""
-                title="<%= @division_data[m.division_id][:name] %>"
-                alt="<%= @division_data[m.division_id][:name] %> logo"
-              />
+              <span class="DivisionLogo"><%= @division_data[m.division_id][:logo] %></span>
             </span>
             <span class="Match-duration"><i class="glyphicon glyphicon-time"></i> <%= m.get_duration() %></span>
           </div>

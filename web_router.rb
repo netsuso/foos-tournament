@@ -39,6 +39,7 @@ get '/ajax/summary/:season_id' do
     division_entity = division_repo.get(d.id)
     @division_data[d.id] = {
       :name => division_entity.name,
+      :logo => division_entity.name.sub('Division ', ''),
       :classification => division_entity.get_current_classification()
     }
   end
@@ -367,6 +368,7 @@ get '/api/get_open_matches' do
     division_data = {}
     division_data[:division_id] = d.id
     division_data[:name] = d.name
+    division_data[:logo] = d.name.sub('Division ', '')
     division_data[:matches] = []
     open_matches = d.get_open_matches()
     open_matches.each do |m|

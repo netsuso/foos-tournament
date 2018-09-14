@@ -307,6 +307,27 @@ aside.active {
   right: 0;
 }
 
+/* Division logo */
+.DivisionLogo {
+  background-color: transparent;
+  color: #0ada7c;
+  display: inline-block;
+  font-family: Montserrat;
+  font-size: 32px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  overflow: hidden;
+  width: 40px;
+}
+
+.DivisionLogo--lg {
+  font-size: 40px;
+  height: 56px;
+  line-height: 56px;
+  width: 56px;
+}
+
 /* Match card */
 .Match {
   color: white;
@@ -332,7 +353,6 @@ aside.active {
 }
 
 .Match-division {
-  background: rgba(10, 218, 124, 0.3);
   float: left;
   height: 40px;
   margin-top: -5px;
@@ -425,6 +445,13 @@ aside.active {
 }
 .SummaryTables-divisionSelector.active {
   background-color: #0ada7c;
+}
+
+.SummaryTables-divisionSelector .DivisionLogo {
+  color: black;
+}
+.SummaryTables-divisionSelector.active .DivisionLogo {
+  color: white;
 }
 
 .SummaryTables-division {
@@ -614,6 +641,7 @@ aside.active {
   border-radius: 4px;
   color: white;
   font-size: 16px;
+  height: 70px;
   list-style: none;
   margin: 4px auto;
   padding: 12px;
@@ -626,15 +654,20 @@ aside.active {
 }
 
 .Ranking-element .Ranking-logo {
-  display: inline-block;
   height: 40px;
   width: 40px;
   margin-right: 20px;
 }
 
+.Ranking-element .Ranking-username {
+  display: inline-block;
+  margin-top: 10px;
+  vertical-align: top;
+}
+
 .Ranking-element .Ranking-counter {
   float: right;
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
 /* Only mobile (tablet vertical) */

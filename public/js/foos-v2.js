@@ -1,7 +1,11 @@
-function log() {
-  console.log("[V2]", ...arguments);
-}
+window.foosv2 = {};
+/**
+ * GENERICS
+ */
 
+/**
+ * Sort an array
+ */
 function sortByVictoriesAndPlayers(a, b) {
   if (a.maxFollowingVictories < b.maxFollowingVictories) return 1;
   if (a.maxFollowingVictories > b.maxFollowingVictories) return -1;
@@ -12,34 +16,59 @@ function sortByVictoriesAndPlayers(a, b) {
   return 0;
 }
 
+/**
+ * Initial execution
+ */
 function v2startup() {
   getDivisions(window.sessionId || default_season_id);
 }
 
+/**
+ * Ajax call to get divisions
+ */
 function getDivisions(seasonId) {
-  $.get("/api/v1/seasons/" + seasonId + "/", handleGetDivisions);
+  $.get("/api/v1/seasons/" + seasonId + "/", function(res) {
+    const response = JSON.parse(res);
+    const activeDivisionByDefault = response.divisions[0].id;
+
+    response.divisions.forEach(function(division) {
+      division.logo = division.title.replace("Division ", "");
+    });
+    window.foosv2.season = response;
+    window.foosv2.divisions = response.divisions;
+
+    populateTopWinners();
+
+    // Remove prev menu items
+    $("#v2-season-selector .tab-division").remove();
+
+    for (var index in response.divisions.reverse()) {
+      // Add elements to menu
+      $("#v2-season-selector").prepend(createDivisionSelector(response.divisions[index]));
+    }
+
+    // Set first element as active
+    setTimeout(() => {
+      selectDivision(activeDivisionByDefault);
+    }, 500);
+  });
 }
 
-function handleGetDivisions(res) {
-  const response = JSON.parse(res);
-  const activeDivisionByDefault = response.divisions[0].id;
-  summary.divisions = response.divisions;
+/**
+ * Selects a division by default
+ * @param {number} divisionId
+ */
+function selectDivision(divisionId) {
+  $(".SummaryTables-divisionSelector").removeClass("active");
+  $(".SummaryTables-divisionSelector[data-id=" + divisionId + "]").addClass("active");
 
-  populateTopWinners();
-
-  // Add elements to menu
-  $("#v2-season-selector .tab-division").remove();
-
-  for (var index in response.divisions.reverse()) {
-    $("#v2-season-selector").prepend(createDivisionSelector(response.divisions[index]));
-  }
-
-  // Set first element as active
-  setTimeout(() => {
-    summary.selectDivision(activeDivisionByDefault);
-  }, 500);
+  $(".SummaryTables-division").removeClass("active");
+  $(".SummaryTables-division[data-id=" + divisionId + "]").addClass("active");
 }
 
+/**
+ * Append tabs to navbar
+ */
 function createDivisionSelector(division) {
   const element = document.createElement("li");
   element.classList.add("tab-division");
@@ -70,10 +99,24 @@ function createDivisionSelector(division) {
   return element;
 }
 
+/**
+ * SIDEBAR
+ */
+
+/**
+ * Open/close recent matches
+ */
 function toggleSidebar() {
   $(".Recents").toggleClass("active");
 }
 
+/**
+ * WIDGET
+ */
+
+/**
+ * Get DOM elements where widget stuff is going to be used
+ */
 function getWidgetItems() {
   return {
     matches: $(".Widget-content .Widget-match"),
@@ -81,6 +124,11 @@ function getWidgetItems() {
   };
 }
 
+/**
+ * Check wich item has an `active` class, and return its index
+ * @param {object[]} elements
+ * @return {number}
+ */
 function getIndexOfActiveElement(elements) {
   var active = -1;
 
@@ -93,6 +141,12 @@ function getIndexOfActiveElement(elements) {
   return active;
 }
 
+/**
+ * Remove `active` class from any widget element, and add it to
+ * the specified element by the indexToSelect param
+ * @param {object[]} cards
+ * @param {number} index
+ */
 function selectWidgetItem(cards, indexToSelect) {
   if (!cards) {
     cards = getWidgetItems();
@@ -117,6 +171,9 @@ function selectWidgetItem(cards, indexToSelect) {
   });
 }
 
+/**
+ * Navigate to prev item
+ */
 function showPrevWidgetItem() {
   var cards = getWidgetItems();
   var activeIndex = getIndexOfActiveElement(cards.matches);
@@ -128,6 +185,9 @@ function showPrevWidgetItem() {
   }
 }
 
+/**
+ * Navigate to next item
+ */
 function showNextWidgetItem() {
   var cards = getWidgetItems();
   var activeIndex = getIndexOfActiveElement(cards.matches);
@@ -139,16 +199,37 @@ function showNextWidgetItem() {
   }
 }
 
+/**
+ * DIVISION: PLAYER DETAILS
+ */
+
+/**
+ * Close player details
+ */
 function closePlayerDetails() {
   $(".Table--withDetails tr").removeClass("active");
 }
 
+/**
+ * Open player details
+ * @param {number} playerId
+ */
 function showPlayerDetails(playerId) {
   closePlayerDetails();
   const row = $(".Table tr[data-id=" + playerId + "]");
   row[0].classList.add("active");
 }
 
+/**
+ * SUMMARY: TOP WINNERS
+ */
+
+/**
+ * Given a list of divisions, it loops through each one to get
+ * people with more following wins
+ * @param {object[]} divisions
+ * @return {object[]}
+ */
 function calculateWinners(divisions) {
   var followingPlayerVictories = [];
 
@@ -194,17 +275,28 @@ function calculateWinners(divisions) {
   return followingPlayerVictories.slice(0, 3);
 }
 
+/**
+ * Merge all matches of all divisions in one single place
+ * @return {Promise<object[]>}
+ */
 function getAllDivisionsMatches() {
   const promises = [];
 
-  for (var x in summary.divisions) {
-    const division = summary.divisions[x];
+  for (var x in window.foosv2.divisions) {
+    const division = window.foosv2.divisions[x];
     promises.push(
       new Promise(function(resolve) {
         $.get("/api/v1/divisions/" + division.id + "/matches/played/?", function(response) {
+          var matches = JSON.parse(response);
+
+          var storedDivision = window.foosv2.divisions.find(d => d.id === division.id);
+          if (storedDivision) {
+            storedDivision.matches = matches;
+          }
+
           resolve({
             division: division.id,
-            matches: JSON.parse(response)
+            matches
           });
         });
       })
@@ -214,6 +306,10 @@ function getAllDivisionsMatches() {
   return Promise.all(promises);
 }
 
+/**
+ * Get the people with best winning streaks
+ * @returns {Promise<object[]>}
+ */
 function getTopWinners() {
   return new Promise(function(resolve) {
     getAllDivisionsMatches().then(function(divisions) {
@@ -241,6 +337,9 @@ function getTopWinners() {
   });
 }
 
+/**
+ * Fill the `Best winning streaks` widget
+ */
 function populateTopWinners() {
   var ranking;
   var promises = [];
@@ -273,27 +372,28 @@ function populateTopWinners() {
         ranking[rankingIndex].player = player;
       });
 
+      foosv2.topWinners = ranking;
+
       var list = document.createElement("ul");
 
-      ranking.forEach(function(position) {
+      ranking.forEach(function(winner) {
         var element = document.createElement("li");
         element.className = "Ranking-element";
 
-        var logo = document.createElement("img");
-        logo.className = "Ranking-logo";
-        logo.src = "";
-        logo.title = "Division logo";
-        logo.alt = "Division logo";
+        var logo = document.createElement("span");
+        var division = window.foosv2.divisions.find(d => d.id === winner.division);
+        logo.className = "Ranking-logo DivisionLogo";
+        logo.innerHTML = division.logo;
         element.appendChild(logo);
 
         var username = document.createElement("span");
         username.className = "Ranking-username";
-        username.innerText = position.player.name;
+        username.innerText = winner.player.name;
         element.appendChild(username);
 
         var counter = document.createElement("span");
         counter.className = "Ranking-counter";
-        counter.innerText = position.maxFollowingVictories + " invictus";
+        counter.innerText = winner.maxFollowingVictories + " invictus";
         element.appendChild(counter);
 
         list.appendChild(element);
@@ -304,18 +404,5 @@ function populateTopWinners() {
     });
   });
 }
-
-var summary = {
-  activeDivision: undefined,
-  selectDivision: function(divisionId) {
-    summary.activeDivision = divisionId;
-
-    $(".SummaryTables-divisionSelector").removeClass("active");
-    $(".SummaryTables-divisionSelector[data-id=" + divisionId + "]").addClass("active");
-
-    $(".SummaryTables-division").removeClass("active");
-    $(".SummaryTables-division[data-id=" + divisionId + "]").addClass("active");
-  }
-};
 
 $(document).ready(v2startup);
