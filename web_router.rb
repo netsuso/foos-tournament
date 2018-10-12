@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 $LOAD_PATH << '.'
 
 require 'sinatra'
@@ -12,6 +13,8 @@ require 'match_repository'
 require 'player_repository'
 require 'result_processor'
 require 'hook_manager'
+
+set :bind, '0.0.0.0'
 
 get '/' do
   season_repo = SeasonRepository.new()

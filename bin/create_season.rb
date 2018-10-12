@@ -1,3 +1,4 @@
+#!/usr/bin/env ruby
 $LOAD_PATH << '..'
 
 require 'season_repository'

@@ -1,14 +1,13 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.5.0)
-      public_suffix (~> 2.0, >= 2.0.2)
-    bcrypt (3.1.11)
+    addressable (2.5.2)
+      public_suffix (>= 2.0.2, < 4.0)
+    backports (3.11.4)
+    bcrypt (3.1.12)
     bcrypt-ruby (3.1.5)
       bcrypt (>= 3.1.3)
-    data_objects (0.10.17)
-      addressable (~> 2.1)
-    datamapper (1.2.0)
+    data_mapper (1.2.0)
       dm-aggregates (~> 1.2.0)
       dm-constraints (~> 1.2.0)
       dm-core (~> 1.2.0)
@@ -18,6 +17,8 @@ GEM
       dm-transactions (~> 1.2.0)
       dm-types (~> 1.2.0)
       dm-validations (~> 1.2.0)
+    data_objects (0.10.17)
+      addressable (~> 2.1)
     dm-aggregates (1.2.0)
       dm-core (~> 1.2.0)
     dm-constraints (1.2.0)
@@ -54,31 +55,42 @@ GEM
       dm-core (~> 1.2.0)
     do_sqlite3 (0.10.17)
       data_objects (= 0.10.17)
-    dotenv (2.2.0)
     fastercsv (1.5.5)
     json (1.8.6)
     json_pure (1.8.6)
-    multi_json (1.12.1)
-    public_suffix (2.0.5)
-    rack (1.6.5)
-    rack-protection (1.5.3)
+    multi_json (1.13.1)
+    public_suffix (3.0.3)
+    rack (1.6.10)
+    rack-protection (1.5.5)
       rack
+    rack-test (1.1.0)
+      rack (>= 1.0, < 3)
     sinatra (1.4.8)
       rack (~> 1.5)
       rack-protection (~> 1.4)
       tilt (>= 1.3, < 3)
+    sinatra-contrib (1.4.7)
+      backports (>= 2.0)
+      multi_json
+      rack-protection
+      rack-test
+      sinatra (~> 1.4.0)
+      tilt (>= 1.3, < 3)
+    sqlite3 (1.3.13)
     stringex (1.5.1)
-    tilt (2.0.6)
+    tilt (2.0.8)
     uuidtools (2.1.5)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
-  datamapper
-  dm-sqlite-adapter
-  dotenv
-  sinatra
+  data_mapper (= 1.2.0)
+  dm-sqlite-adapter (= 1.2.0)
+  json (~> 1.6)
+  sinatra (= 1.4.8)
+  sinatra-contrib
+  sqlite3
 
 BUNDLED WITH
-   1.14.5
+   1.16.6
