@@ -15,7 +15,7 @@ RUN bundle install
 
 COPY . .
 
-RUN mv config.yaml.docker config.yaml && \
+RUN mv config.yml.docker config.yml && \
     cd dm && ./upgrade_model.rb && \
     cd ../bin && ./create_season.rb "Season" --active
 

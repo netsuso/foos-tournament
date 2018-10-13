@@ -14,6 +14,7 @@ require 'player_repository'
 require 'result_processor'
 require 'hook_manager'
 
+# This is needed to run inside docker
 set :bind, '0.0.0.0'
 
 get '/' do
@@ -227,7 +228,9 @@ post '/ajax/simulation/:match' do
   erb :simulation
 end
 
-get %r{/api/v1/players/?$} do
+mustermann_opts = {:type => :regexp, :check_anchors => false}
+
+get '/api/v1/players/?$', :mustermann_opts => mustermann_opts do
   player_repo = PlayerRepository.new()
   response = {}
   player_repo.get_all_players().each do |p|
@@ -236,13 +239,13 @@ get %r{/api/v1/players/?$} do
   json_api(response)
 end
 
-get %r{/api/v1/players/(?<player_id>\d+)/?$} do
+get '/api/v1/players/(?<player_id>\d+)/?$', :mustermann_opts => mustermann_opts do
   player_repo = PlayerRepository.new()
   p = player_repo.get(params[:player_id])
   json_api(player2api(p))
 end
 
-get %r{/api/v1/seasons/?$} do
+get '/api/v1/seasons/?$', :mustermann_opts => mustermann_opts do
   season_repo = SeasonRepository.new()
   response = []
   season_repo.get_all_seasons().each do |s|
@@ -251,25 +254,25 @@ get %r{/api/v1/seasons/?$} do
   json_api(response)
 end
 
-get %r{/api/v1/seasons/current/?$} do
+get '/api/v1/seasons/current/?$', :mustermann_opts => mustermann_opts do
   season_repo = SeasonRepository.new()
   s = season_repo.get_most_recent_season()
   json_api(season2api(s))
 end
 
-get %r{/api/v1/seasons/(?<season_id>\d+)/?$} do
+get '/api/v1/seasons/(?<season_id>\d+)/?$', :mustermann_opts => mustermann_opts do
   season_repo = SeasonRepository.new()
   s = season_repo.get(params[:season_id].to_i)
   json_api(season2api(s))
 end
 
-get %r{/api/v1/divisions/(?<division_id>\d+)/?$} do
+get '/api/v1/divisions/(?<division_id>\d+)/?$', :mustermann_opts => mustermann_opts do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
   json_api(division2api(d))
 end
 
-get %r{/api/v1/divisions/(?<division_id>\d+)/players/?$} do
+get '/api/v1/divisions/(?<division_id>\d+)/players/?$', :mustermann_opts => mustermann_opts do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
   response = {}
@@ -279,7 +282,7 @@ get %r{/api/v1/divisions/(?<division_id>\d+)/players/?$} do
   json_api(response)
 end
 
-get %r{/api/v1/divisions/(?<division_id>\d+)/players/(?<player_id>\d+)/?$} do
+get '/api/v1/divisions/(?<division_id>\d+)/players/(?<player_id>\d+)/?$', :mustermann_opts => mustermann_opts do
   response = {}
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
@@ -298,7 +301,7 @@ get %r{/api/v1/divisions/(?<division_id>\d+)/players/(?<player_id>\d+)/?$} do
   json_api(response)
 end
 
-get %r{/api/v1/divisions/(?<division_id>\d+)/matches/?$} do
+get '/api/v1/divisions/(?<division_id>\d+)/matches/?$', :mustermann_opts => mustermann_opts do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
   response = []
@@ -310,7 +313,7 @@ get %r{/api/v1/divisions/(?<division_id>\d+)/matches/?$} do
   json_api(response)
 end
 
-get %r{/api/v1/divisions/(?<division_id>\d+)/matches/open/?$} do
+get '/api/v1/divisions/(?<division_id>\d+)/matches/open/?$', :mustermann_opts => mustermann_opts do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
 
@@ -323,7 +326,7 @@ get %r{/api/v1/divisions/(?<division_id>\d+)/matches/open/?$} do
   json_api(response)
 end
 
-get %r{/api/v1/divisions/(?<division_id>\d+)/matches/played/?$} do
+get '/api/v1/divisions/(?<division_id>\d+)/matches/played/?$', :mustermann_opts => mustermann_opts do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
 
@@ -336,7 +339,7 @@ get %r{/api/v1/divisions/(?<division_id>\d+)/matches/played/?$} do
   json_api(response)
 end
 
-get %r{/api/v1/divisions/(?<division_id>\d+)/classification/?$} do
+get '/api/v1/divisions/(?<division_id>\d+)/classification/?$', :mustermann_opts => mustermann_opts do
   division_repo = DivisionRepository.new()
   d = division_repo.get(params[:division_id].to_i)
   response = d.get_current_classification()
@@ -344,7 +347,7 @@ get %r{/api/v1/divisions/(?<division_id>\d+)/classification/?$} do
   json_api(response)
 end
 
-get %r{/api/v1/matches/(?<match_id>\d+)/?$} do
+get '/api/v1/matches/(?<match_id>\d+)/?$', :mustermann_opts => mustermann_opts do
   match_repo = MatchRepository.new()
   match = match_repo.get(params[:match_id].to_i)
   if match.played?
