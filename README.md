@@ -6,42 +6,22 @@ tournament for about 60 people.
 
 It relates to the [Foosball instant replay](https://github.com/swehner/foos) project.
 
-Barely working version, expect documentation and a demo soon.
+# Running
 
-# Installation
+We provide a docker-based build. So you just need to create the docker
 
-## Pre-requisites
+`make docker`
 
-1. ruby > v1.9.3
-2. sqlite3
-4. Gems:
-   - sinatra
-   - data_mapper
-   - dm-sqlite-adapter
-   - sqlite3
+and then run it
 
-### Additional pre-requisites for Ubuntu
+`make run`
 
-1. ruby-full package, instead of just ruby
-2. libsqlite3-dev
+Usually, when running the a docker tool with state you want it outside
+the container. Here, the state is on the sqlite DB, so you can manually
+create it and mount when running docker. You can do this with:
 
-## Preparing for the first execution
+`make run_localdb`
 
-1. Make a copy of the file ```config.yaml.sample``` and rename it to ```config.yaml```
-```
-> cp config.yaml.sample config.yaml
-```
-2. Update the ```db_uri``` value to point to your data base
-3. Generate the database and the first season
-```
-> cd <source-path>/dm
-> ruby upgrade_model.rb
-> cd ../bin
-> ruby create_season.rb "<any season name>" --active
-```
-
-## Running the app
-
-```
-> ruby web_router.rb
-```
+If this doesn't work for you, you may need to change the sqlite file
+permissions to give RW permissions to every user or fix it any other
+way (like running docker with your uid).
